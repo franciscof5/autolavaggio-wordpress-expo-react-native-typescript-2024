@@ -65,7 +65,14 @@ export const WizardStore = new Store({
     "post_type":"",
     "post_mime_type":"",
     "comment_count":"",
-    "filter":""
+    "filter":"",
+    "title": {
+      "rendered": "loading... ..."
+    }
+  },
+  //
+  partners_object: {
+    
   },
   //controlled from app
   session_object: {

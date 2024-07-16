@@ -24,101 +24,13 @@ const soundStart = require("../sounds/crank-2.mp3")
 const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
 const soundRing = require("../sounds/telephone-ring-1.mp3")
 
-function setSecondsRemainingFromPHP(val) {
-  WizardStore.update((s)=>{
-    s.secondsRemainingFromPHP = val;
-  })
-}
-
 let pomodoroTime = WizardStore.getRawState().session_object.pomodoroTime;
 let restTime=WizardStore.getRawState().session_object.restTime;
-
-const UrgeWithPleasureComponent = ( () => {
-  const [secondsRemainingInsideClock, setSecondsRemainingInsideClock] = useState(pomodoroTime);
-  const [key, setKey] = useState(0);
-  const [isPlayingR, setIsPlayingR] = useState(Boolean);
-  const [buttonTitle, setButtonTitle] = useState("Iniciar");
-  const [pomodorosDone, setPomodorosDone] = useState(0);
-  const [isPomodoroTime, setIsPomodoroTime] = useState(true);
-  const [sound, setSound] = useState(null);
-  const [remainingTime, setRemainingTime] = useState();
-
-  async function playSound(soundR) {
-    const { sound } = await Audio.Sound.createAsync( soundR );
-    setSound(sound);
-    await sound.playAsync();
-  }
-
-  const completeCicle = function() {
-    if (isPomodoroTime==true) {
-      //it just completed a pomodoro
-      setPomodorosDone(pomodorosDone+1)
-      setIsPomodoroTime(false)
-      setSecondsRemainingFromPHP(restTime)
-      playSound(soundTrompeth)
-    } else {
-      //it just finished a rest
-      setIsPomodoroTime(true)
-      setSecondsRemainingFromPHP(pomodoroTime)
-    }
-    //always has to setKey
-    setKey(prevKey => prevKey + 1)
-    return { 
-      shouldRepeat: true, 
-      delay: 1.5,
-    } 
-  }
-
-  const actioButton = function() {
-    setSecondsRemainingFromPHP(pomodoroTime)
-    if (isPlayingR==true) {
-      setKey(prevKey => prevKey + 1)
-      setIsPlayingR(false)
-      setButtonTitle("Iniciar")
-      playSound(soundRing)
-    } else {
-      setIsPlayingR(true)
-      setButtonTitle("Parar")
-      playSound(soundStart)          
-    }
-  }
-
-  return (
-    <View>
-      <TouchableOpacity style={styles.buttonFloat} onPress={()=>{actioButton()}} />
-      <CountdownCircleTimer
-        key={key}
-        size={300}
-        strokeWidth={25}
-        isPlaying={isPlayingR}
-        duration={WizardStore.getRawState().secondsRemainingFromPHP}
-        colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-        colorsTime={[7, 5, 2, 0]}
-        onComplete={ () => {
-          completeCicle()
-        } }
-      >
-        {({ remainingTime }) => <View>
-            <Text style={styles.titleText}>{returnSecondToClock(remainingTime)}</Text>
-            {/* <Text>seconds: {secondsRemainingFromPHP}</Text> */}
-            </View>
-        }
-      </CountdownCircleTimer>
-
-      <ProgressBar style={{height:20, marginTop:20,marginBottom:20}} progress={0.01+(pomodorosDone/4)} color={MD3Colors.error50} />
-
-      <View>
-        <Image source={foca} style={styles.mascotImage}/>
-        <Text style={styles.mascotText}>{buttonTitle} / pomodoros done {pomodorosDone}  </Text>
-      </View>
-    </View>
-  )
-})
 
 const TaskPanel = ( (rdata) =>{
   return (
     <View>
-      <Text>Tarefa </Text>
+      <Text>Tarefa { WizardStore.getRawState().post_object.post_title }</Text>
     </View>
   )
 })
@@ -153,48 +65,27 @@ export default function App() {
 
     var options = {
       method: 'GET',
-      url: 'https://www.pomodoros.com.br/wp-admin/admin-ajax.php',
-      params: {
-        action: 'load_session',
-        t: WizardStore.getRawState().token
-      },
+      url: 'https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/booking',
+      // params: {
+      //   action: 'load_session',
+      //   // t: WizardStore.getRawState().token
+      // },
     };
     console.log("options", options)
-    axios.request(options).then(function (r) {
-      setRdata(r.data.post_object);
-      console.log("r.data.post_object", r.data.post_object);
-      let secsP = r.data.secondsRemainingFromPHP;
-      let post_status = r.data.post_object.post_status;
-      console.log("secsP", secsP);
-      console.log("post_status", post_status);
-      if(post_status=="future") {
-        setSecondsRemainingFromPHP(secsP)
-      } else {
-        setSecondsRemainingFromPHP(pomodoroTime)
-      }
+    axios.request(options)
+    .then(function (r) {
+      setRdata(r.data);
+      console.log("r.data[0]", r.data[0]);
+      // let secsP = r.data.secondsRemainingFromPHP;
+      // let post_status = r.data.post_object.post_status;
+      // console.log("secsP", secsP);
+      // console.log("post_status", post_status);
       WizardStore.update((s)=>{
-        s.post_object = r.data.post_object
+        s.post_object = r.data[0]
       })
     }).catch(function (error) {
       console.error(error);
     });
-
-    // let data_load_session = {
-    //   method: "GET",
-    //   action: "load_session",
-    //   t: WizardStore.getRawState().token,
-    // };
-    // await axios.request("https://www.pomodoros.com.br/wp-admin/admin-ajax.php", data_load_session)
-    // .then((r)=> {
-    //   setRdata(r.data);
-    //   let secsP = r.data.secondsRemainingFromPHP;
-    //   //pomodoroTime = r.data.secondsRemainingFromPHP;
-    //   //rdata = r.data;
-    //   console.log("secsP", secsP);
-    // })
-    // .catch(function (error) {
-    //   console.error(error);
-    // });
   }
 
   return (
@@ -211,20 +102,20 @@ export default function App() {
         <Text>Name: {WizardStore.getRawState().user.username} | {WizardStore.getRawState().user.id}</Text>
         <Text>{WizardStore.getRawState().post_object.post_status ? WizardStore.getRawState().post_object.post_status + " | " + WizardStore.getRawState().post_object.post_title : "loading..."}</Text>
         {/* <Text>TT{ WizardStore.getRawState().post_object["post_status"] }</Text> */}
-        <UrgeWithPleasureComponent />
-        <TaskPanel />
-        <Text>{WizardStore.getRawState().post_object.post_title} - Your expo push token: {expoPushToken}</Text>
+        {/* <TaskPanel /> */}
+        {/* <Text>Tarefa { rdata[0].id }</Text> */}
+        <Text>{WizardStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
       </View>
-      <Button
+      {/* <Button
         title="Press to schedule a notification"
         onPress={async () => {
           await schedulePushNotification();
         }}
-      />
+      /> */}
       </View>
     </PaperProvider>
   );
@@ -316,20 +207,3 @@ async function registerForPushNotificationsAsync() {
 
   return token;
 }
-
-const returnSecondToClock = function (totalSeconds) {
-  if (totalSeconds) {
-    let hours   = Math.floor(totalSeconds / 3600);
-    let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
-    let seconds = totalSeconds - (hours * 3600) - (minutes * 60);
-
-    seconds = Math.round(seconds * 100) / 100; 
-
-    let result = "";//hide hours (hours < 10 ? "0" + hours : hours);
-    result += (minutes < 10 ? "0" + minutes : minutes);
-    result += ":" + (seconds  < 10 ? "0" + seconds : seconds);
-    return result;
-
-  }
-  return totalSeconds;
-};

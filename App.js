@@ -15,7 +15,7 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 const Stack = createStackNavigator();
 
 import Login from "./pages/Login"
-import Focus from "./pages/Focus";
+import Booking from "./pages/Booking";
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -29,7 +29,7 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Focus" component={Focus} />
+          <Stack.Screen name="Booking" component={Booking} />
           </Stack.Navigator>
         </NavigationContainer>
       </RootSiblingParent>

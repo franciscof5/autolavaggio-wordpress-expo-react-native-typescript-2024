@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert, Image } from "react-native";
 import Constants from "expo-constants";
 
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
@@ -8,6 +8,9 @@ import { Button, MD3Colors, ProgressBar, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 import axios from "axios"; 
 import Toast from 'react-native-root-toast';
+
+const logo = require("../images/gio-logo.png")
+const lavagem1 = require("../images/foto-lavagem-1.jpg")
 
 //import { jsonFieldsChecklist } from "../assets/jsonFieldsChecklist.json"
 //import { data } from "../assets/data.json"
@@ -47,14 +50,14 @@ export default function LoginScreen({ navigation }) {
       username: "foca",
       password: "931777"
     }
-    axios.post("https://www.pomodoros.com.br/wp-json/jwt-auth/v1/token", datasend_login)
+    axios.post("https://autolavaggio.franciscomatelli.com.br/wp-json/jwt-auth/v1/token", datasend_login)
     .then((r)=> {
       let token = r.data.token;
       console.log("token", token);
       
       var options = {
         method: 'POST',
-        url: 'https://www.pomodoros.com.br/wp-json/wp/v2/users/me',
+        url: 'https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/users/me',
         headers: {
           Authorization: 'Bearer ' + token,
         }
@@ -69,13 +72,13 @@ export default function LoginScreen({ navigation }) {
             s.user = r2.data;
             let toast = Toast.show('Bem vindo ' + r2.data.username, { position: 0 });
           })
-          navigation.navigate("Focus");
+          navigation.navigate("Booking");
       }).catch(function (error) {
         let toast = Toast.show('Erro ao recuperar dados do usuário', { position: 0 });
         console.error(error);
       });
 
-      // axios.post("https://www.pomodoros.com.br/wp-json/wp/v2/users/me", datasend_tokenme)
+      // axios.post("https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/users/me", datasend_tokenme)
       // })
       // .catch(function (error) {
       //   console.log(error);
@@ -94,7 +97,7 @@ export default function LoginScreen({ navigation }) {
         color={MD3Colors.primary60}
       />
       <View style={{ paddingHorizontal: 16 }}>
-        
+        <Image source={logo}  style={styles.logoStyle}/>
         <View style={styles.formEntry}>
           <Controller
             control={control}
@@ -104,8 +107,8 @@ export default function LoginScreen({ navigation }) {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 mode="outlined"
-                label="Usuário"
-                placeholder="Digite seu nome de usuário"
+                label="Nomeutente"
+                placeholder="Digite nomeutente"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -115,7 +118,7 @@ export default function LoginScreen({ navigation }) {
           />
           {errors.username && (
             <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
-              Campo obrigatório.
+              Campo obbligatorio.
             </Text>
           )}
         </View>
@@ -129,8 +132,8 @@ export default function LoginScreen({ navigation }) {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 mode="outlined"
-                label="Senha"
-                placeholder="Digite sua senha"
+                label="Password"
+                placeholder="Digite password"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -151,9 +154,11 @@ export default function LoginScreen({ navigation }) {
           mode="outlined"
           style={styles.button}
         >
-          ENTRAR
+          ENTRARE
         </Button>
       </View>
+      <Image source={lavagem1}  style={styles.imagemLavagem}/>
+        
     </View>
   );
 }
@@ -171,4 +176,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 0,
   },
+  logoStyle: {
+    height: 120,
+    resizeMode: "contain",
+    flexDirection: "row", 
+    width:"100%",
+ },
+ imagemLavagem: {
+  height: 250,
+  resizeMode: "contain",
+  flexDirection: "row", 
+  width:"100%",
+}
 });
