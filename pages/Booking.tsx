@@ -7,9 +7,21 @@ import { AppRegistry } from 'react-native';
 import { ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import GetLocation from 'react-native-get-location'
 import axios from 'axios';
 import { WizardStore } from "../storage";
 
+GetLocation.getCurrentPosition({
+  enableHighAccuracy: true,
+  timeout: 60000,
+})
+.then(location => {
+  console.log("locationlocation"+location);
+})
+.catch(error => {
+  const { code, message } = error;
+  console.warn(code, message);
+})
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -100,10 +112,6 @@ export default function App() {
             await load_session()
           }} />
         <Text>Name: {WizardStore.getRawState().user.username} | {WizardStore.getRawState().user.id}</Text>
-        <Text>{WizardStore.getRawState().post_object.post_status ? WizardStore.getRawState().post_object.post_status + " | " + WizardStore.getRawState().post_object.post_title : "loading..."}</Text>
-        {/* <Text>TT{ WizardStore.getRawState().post_object["post_status"] }</Text> */}
-        {/* <TaskPanel /> */}
-        {/* <Text>Tarefa { rdata[0].id }</Text> */}
         <Text>{WizardStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Text>Title: {notification && notification.request.content.title} </Text>
