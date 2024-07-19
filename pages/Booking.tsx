@@ -9,7 +9,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
 import { WizardStore } from "../storage";
-
+import * as Location from "expo-location";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -41,10 +41,25 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [rdata, setRdata] = useState([]);
+  const [location, setLocation] = useState();
 
   useEffect(() => {
     load_session();
-
+    // expo-location
+    const getPermissions = async() => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if ( status !== "granted" ) {
+        console.log("need location");
+        return;
+      }
+      
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      console.log("local:");
+      console.log(currentLocation);
+    }
+    getPermissions();
+    // push
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
