@@ -9,7 +9,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
 import { WizardStore } from "../storage";
-
+import * as Location from "expo-location";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -41,10 +41,26 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [rdata, setRdata] = useState([]);
+  const [location, setLocation] = useState();
+  const [address, setAddress] = useState();
 
   useEffect(() => {
     load_session();
-
+    // expo-location
+    const getPermissions = async() => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if ( status !== "granted" ) {
+        console.log("need location");
+        return;
+      }
+      
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      console.log("local:");
+      console.log(currentLocation);
+    }
+    getPermissions();
+    // push
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -88,34 +104,27 @@ export default function App() {
     });
   }
 
+  const geocode = async () => {
+    const geocodedLocation = await Location.geocodeAsync(address);
+    console.log("geocodedLocation:");
+    console.log(geocodedLocation);
+  };
+
+  const getAddress = async () => {
+    const addressFromCoords = await Location.reverseGeocodeAsync({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    })
+    console.log("address")
+    console.log(addressFromCoords)
+  }
   return (
     <PaperProvider>
       <View style={styles.container}>
-        {/* <Text>Open up App.js to start working on your app!</Text> */}
         <StatusBar style="auto" />
-        <Button 
-          title="load_session()"
-          onPress={
-          async () => {
-            await load_session()
-          }} />
-        <Text>Name: {WizardStore.getRawState().user.username} | {WizardStore.getRawState().user.id}</Text>
-        <Text>{WizardStore.getRawState().post_object.post_status ? WizardStore.getRawState().post_object.post_status + " | " + WizardStore.getRawState().post_object.post_title : "loading..."}</Text>
-        {/* <Text>TT{ WizardStore.getRawState().post_object["post_status"] }</Text> */}
-        {/* <TaskPanel /> */}
-        {/* <Text>Tarefa { rdata[0].id }</Text> */}
-        <Text>{WizardStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-      </View>
-      {/* <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      /> */}
+        <TextInput placeholder="Address" value={address} onChangeText={setAddress} />
+        <Button title="Get geocode" onPress={geocode} />
+        <Button title="Get address" onPress={getAddress} />
       </View>
     </PaperProvider>
   );
