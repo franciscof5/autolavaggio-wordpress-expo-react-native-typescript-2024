@@ -57,7 +57,7 @@ const TaskPanel = ( (rdata) =>{
   )
 })
 
-export default function AddCar({ navigation }) {
+export default function AddCarDetails({ navigation }) {
   // keep back arrow from showing
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -77,21 +77,21 @@ export default function AddCar({ navigation }) {
     watch,
     formState: { errors },
   } = useForm({ defaultValues: WizardStore.useState((s) => s) });
-  const { fields, append, prepend, remove, swap, move, insert, replace } =
-  useFieldArray({
-    control,
-    name: "test",
-    // rules: {
-    //   minLength: 4,
-    // },
-  });
+//   const { fields, append, prepend, remove, swap, move, insert, replace } =
+//   useFieldArray({
+//     control,
+//     name: "test",
+//     // rules: {
+//     //   minLength: 4,
+//     // },
+//   });
   
   useEffect(() => {
     isFocused &&
     WizardStore.update((s) => {
       s.progress = 10;
     });
-    }, [isFocused, replace]);
+    }, [isFocused]);
 
     const onSubmit = (data) => {
     //axios.get("http://app.trcmobile.com.br/ws/checklist/new_checklist.php")
@@ -103,7 +103,7 @@ export default function AddCar({ navigation }) {
             //     ["notas_calculadas"]:[]
             // }
         });
-        navigation.navigate("AddCarDetails");
+        navigation.navigate("ChecklistGroup");
     //})
     };
     const isFocused = useIsFocused();  
@@ -127,21 +127,6 @@ export default function AddCar({ navigation }) {
             }) }
             {/* <List.Item            title="Second Item"            left={() => <List.Icon color={MD3Colors.tertiary70} icon="folder" />}/> */}
         </List.Section>
-        <Button
-          mode="outlined"
-          style={[styles.button, { marginTop: 40 }]}
-          onPress={() => navigation.goBack()}
-        >
-          VOLTAR
-        </Button>
-        <Button
-          title="Submit"
-          mode="outlined"
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}
-        >
-          PRÓXIMO PASSO
-        </Button>
       </ScrollView>
     </PaperProvider>
   );
@@ -157,24 +142,6 @@ const styles = StyleSheet.create({
 });
 
 /*
-Utilitaria (carro utilitário) - Pequenos carros urbanos, como o Fiat Panda.
-Compatta (carro compacto) - Carros de tamanho médio, como o Volkswagen Golf.
-Berline (sedan) - Carros com quatro portas e um porta-malas separado, como o BMW Série 3.
-Station Wagon (perua) - Carros com maior espaço no porta-malas, como o Volvo V60.
-SUV (Sport Utility Vehicle) - Veículos utilitários esportivos, como o Jeep Renegade.
-Crossover - Mistura de SUV e carro compacto, como o Nissan Qashqai.
-Coupé - Carros com duas portas e estilo esportivo, como o Audi TT.
-Cabriolet ou Convertible (conversível) - Carros com teto retrátil, como o Mazda MX-5.
-Monovolume (minivan) - Carros com espaço interno ampliado para famílias, como o Renault Espace.
-Utilitaria
-Compatta
-Berline
-Station Wagon
-SUV
-Crossover
-Coupé
-Convertible
-Monovolume
-todo: Icon by Iconpacks
-todo: https://www.iconpacks.net/free-icon-pack/car-types-180.html
+local
+ultima lavagem
 */

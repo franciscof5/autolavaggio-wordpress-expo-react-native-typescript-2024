@@ -72,7 +72,7 @@ export default function LoginScreen({ navigation }) {
             s.user = r2.data;
             let toast = Toast.show('Bem vindo ' + r2.data.username, { position: 0 });
           })
-          navigation.navigate("Booking");
+          navigation.navigate("HomeMap");
       }).catch(function (error) {
         let toast = Toast.show('Erro ao recuperar dados do usuário', { position: 0 });
         console.error(error);

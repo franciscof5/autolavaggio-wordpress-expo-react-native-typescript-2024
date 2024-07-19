@@ -2,6 +2,7 @@ import { registerInDevtools, Store } from "pullstate";
 
 export const WizardStore = new Store({
   //received from API
+  progress:0,
   token: "",
   user_object: {
     "id": null,
