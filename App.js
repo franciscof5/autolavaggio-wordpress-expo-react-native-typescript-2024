@@ -27,7 +27,7 @@ export default function App() {
     <PaperProvider>
       <RootSiblingParent>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="Booking">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Booking" component={Booking} />
           </Stack.Navigator>
