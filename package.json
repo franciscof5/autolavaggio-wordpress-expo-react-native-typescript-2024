@@ -31,7 +31,8 @@
     "react-native-svg": "^14.1.0",
     "react-native-web": "~0.19.6",
     "typescript": "^5.3.0",
-    "expo-location": "~17.0.1"
+    "expo-location": "~17.0.1",
+    "react-native-gesture-handler": "~2.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
