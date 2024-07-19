@@ -9,7 +9,9 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
 import { WizardStore } from "../storage";
-
+import MapView, {Marker} from 'react-native-maps';
+import * as Location from "expo-location";
+import GetLocation from 'react-native-get-location';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -41,10 +43,31 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [rdata, setRdata] = useState([]);
+  const [mapRegion, setMapRegion] = useState({
+    latitude: 41.8905,
+    longitude: 12.4942,
+    latitudeDelta: 30,
+    longitudeDelta: 12
+  });
+
+  const userLocation = async() => {
+    let {status} = await Location.requestBackgroundPermissionsAsync();
+    if (status !== "granted") {
+      console.log("need location");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy:true});
+    setMapRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.002
+    })
+  }
 
   useEffect(() => {
     load_session();
-
+    userLocation();
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -93,29 +116,15 @@ export default function App() {
       <View style={styles.container}>
         {/* <Text>Open up App.js to start working on your app!</Text> */}
         <StatusBar style="auto" />
-        <Button 
-          title="load_session()"
-          onPress={
-          async () => {
-            await load_session()
-          }} />
-        <Text>Name: {WizardStore.getRawState().user.username} | {WizardStore.getRawState().user.id}</Text>
-        <Text>{WizardStore.getRawState().post_object.post_status ? WizardStore.getRawState().post_object.post_status + " | " + WizardStore.getRawState().post_object.post_title : "loading..."}</Text>
-        {/* <Text>TT{ WizardStore.getRawState().post_object["post_status"] }</Text> */}
-        {/* <TaskPanel /> */}
-        {/* <Text>Tarefa { rdata[0].id }</Text> */}
-        <Text>{WizardStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-      </View>
-      {/* <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      /> */}
+        <MapView style={styles.map} 
+          region={mapRegion}
+        >
+          <Marker title="Io" coordinate={mapRegion} />
+        </MapView>
+        {/* <Button onPress={userLocation} title="Get location" /> */}
+        <Button title="Adicionar Macchina" />
+        <Text>Lista de carros ícones accordion</Text>
+        {/* tem que ser no car details <Button title="Solicitar Lavaggio" /> */}
       </View>
     </PaperProvider>
   );
@@ -125,8 +134,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#DDD',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   countdownCircleTimer: {
     width:1000,
@@ -160,6 +169,10 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 50,
     fontWeight: 'bold',
+  },
+  map: {
+    width: '100%',
+    height: '80%',
   },
 });
 
