@@ -16,6 +16,7 @@ const Stack = createStackNavigator();
 
 import Login from "./pages/Login"
 import Booking from "./pages/Booking";
+import AddCar from "./pages/AddCar"
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -27,9 +28,10 @@ export default function App() {
     <PaperProvider>
       <RootSiblingParent>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Booking" component={Booking} />
+          <Stack.Navigator initialRouteName="AddCar">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Booking" component={Booking} />
+            <Stack.Screen name="AddCar" component={AddCar} />
           </Stack.Navigator>
         </NavigationContainer>
       </RootSiblingParent>
