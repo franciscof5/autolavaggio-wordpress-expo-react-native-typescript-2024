@@ -91,21 +91,21 @@ export default function AddCar({ navigation }) {
     WizardStore.update((s) => {
       s.progress = 10;
     });
-    }, [isFocused, replace]);
+  }, [isFocused, replace]);
 
-    const onSubmit = (data) => {
+  const onSubmit = (data) => {
     //axios.get("http://app.trcmobile.com.br/ws/checklist/new_checklist.php")
     //.then((r)=> {
-        //console.log("r.data.data.grupo_checklist", r.data.data.grupo_checklist)        
-        WizardStore.update((s) => {
-            s.progress = 20;
-            // s.step = {
-            //     ["notas_calculadas"]:[]
-            // }
-        });
-        navigation.navigate("AddCarDetails");
+      //console.log("r.data.data.grupo_checklist", r.data.data.grupo_checklist)        
+      WizardStore.update((s) => {
+          s.progress = 20;
+          // s.step = {
+          //     ["notas_calculadas"]:[]
+          // }
+      });
+      navigation.navigate("AddCarDetails");
     //})
-    };
+  };
     const isFocused = useIsFocused();  
   
   return (
