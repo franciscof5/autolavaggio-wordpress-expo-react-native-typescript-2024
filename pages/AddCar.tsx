@@ -8,7 +8,7 @@ import { MD3LightTheme as DefaultTheme,
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
-import { WizardStore } from "../storage";
+import { LavaggioStore } from "../storage";
 import {
     SubmitHandler,
     useForm,
@@ -52,7 +52,7 @@ const mockCarTypes = {
 const TaskPanel = ( (rdata) =>{
   return (
     <View>
-      <Text>Tarefa { WizardStore.getRawState().post_object.post_title }</Text>
+      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
     </View>
   )
 })
@@ -76,7 +76,7 @@ export default function AddCar({ navigation }) {
     reset,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: WizardStore.useState((s) => s) });
+  } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
   const { fields, append, prepend, remove, swap, move, insert, replace } =
   useFieldArray({
     control,
@@ -88,7 +88,7 @@ export default function AddCar({ navigation }) {
   
   useEffect(() => {
     isFocused &&
-    WizardStore.update((s) => {
+    LavaggioStore.update((s) => {
       s.progress = 10;
     });
   }, [isFocused, replace]);
@@ -97,7 +97,7 @@ export default function AddCar({ navigation }) {
     //axios.get("http://app.trcmobile.com.br/ws/checklist/new_checklist.php")
     //.then((r)=> {
       //console.log("r.data.data.grupo_checklist", r.data.data.grupo_checklist)        
-      WizardStore.update((s) => {
+      LavaggioStore.update((s) => {
           s.progress = 20;
           // s.step = {
           //     ["notas_calculadas"]:[]

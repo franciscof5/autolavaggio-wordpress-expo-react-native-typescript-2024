@@ -1,6 +1,6 @@
 import { registerInDevtools, Store } from "pullstate";
 
-export const WizardStore = new Store({
+export const LavaggioStore = new Store({
   //received from API
   progress:0,
   token: "",
@@ -42,7 +42,7 @@ export const WizardStore = new Store({
       ]
     }
   },
-  post_object: {
+  car_object: {
     "ID":null,
     "post_author":null,
     "post_date":"",
@@ -54,7 +54,7 @@ export const WizardStore = new Store({
     "comment_status":"",
     "ping_status":"",
     "post_password":"",
-    "post_name":"",
+    "post_name":"Macchina Name",
     "to_ping":"",
     "pinged":"",
     "post_modified":"",
@@ -71,26 +71,74 @@ export const WizardStore = new Store({
       "rendered": "loading... ..."
     }
   },
+  fleet: [
+    {
+    "ID":null,
+    "post_author":null,
+    "post_date":"",
+    "post_date_gmt":"",
+    "post_content":"",
+    "post_title":"",
+    "post_excerpt":"",
+    "post_status":"",
+    "comment_status":"",
+    "ping_status":"",
+    "post_password":"",
+    "post_name":"Macchina Name",
+    "to_ping":"",
+    "pinged":"",
+    "post_modified":"",
+    "post_modified_gmt":"",
+    "post_content_filtered":"",
+    "post_parent":0,
+    "guid":"",
+    "menu_order":0,
+    "post_type":"",
+    "post_mime_type":"",
+    "comment_count":"",
+    "filter":"",
+    "title": {
+      "rendered": "loading... ..."
+    }
+  }, 
+  {
+    "ID":null,
+    "post_author":null,
+    "post_date":"",
+    "post_date_gmt":"",
+    "post_content":"",
+    "post_title":"",
+    "post_excerpt":"",
+    "post_status":"",
+    "comment_status":"",
+    "ping_status":"",
+    "post_password":"",
+    "post_name":"Macchina Name",
+    "to_ping":"",
+    "pinged":"",
+    "post_modified":"",
+    "post_modified_gmt":"",
+    "post_content_filtered":"",
+    "post_parent":0,
+    "guid":"",
+    "menu_order":0,
+    "post_type":"",
+    "post_mime_type":"",
+    "comment_count":"",
+    "filter":"",
+    "title": {
+      "rendered": "loading... ..."
+    }
+  }],
+  car_ids: [12,44,54],
   //
-  partners_object: {
-    
-  },
+  partners_ids: [13,409],
   //controlled from app
   session_object: {
-    secondsRemainingFromPHP: 0,
-    secondsRemainingClock: "",
-    pomodoro_actual: 0,
-    pomodoros_done_today: 0,
-    pomodoros_to_big_rest: 4,
-    pomodoroTime: 1500,
-    restTime: 300,
-    bigRestTime: 1800,
-    intervalMiliseconds: 1000,
-    button_title: "Focar",  
-    is_pomodoro: true,//is_pomodoros is when using timer for focusing (otherwise ir resting)
+  
   },
 });
 
 registerInDevtools({
-  WizardStore,
+  LavaggioStore,
 });

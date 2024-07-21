@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, BottomNavigation, ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
+import { List, Button, BottomNavigation, ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
-import { WizardStore } from "../storage";
+import { LavaggioStore } from "../storage";
 import MapView, {Marker} from 'react-native-maps';
 import * as Location from "expo-location";
 //import GetLocation from 'react-native-get-location';
@@ -23,13 +23,13 @@ const soundStart = require("../sounds/crank-2.mp3")
 const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
 const soundRing = require("../sounds/telephone-ring-1.mp3")
 
-let pomodoroTime = WizardStore.getRawState().session_object.pomodoroTime;
-let restTime=WizardStore.getRawState().session_object.restTime;
+let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
+let restTime=LavaggioStore.getRawState().session_object.restTime;
 
 const TaskPanel = ( (rdata) =>{
   return (
     <View>
-      <Text>Tarefa { WizardStore.getRawState().post_object.post_title }</Text>
+      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
     </View>
   )
 })
@@ -52,11 +52,30 @@ export default function HomeMapTabs({ navigation }) {
   const CarsRoute = () => 
   <View> 
     <Text>Your Cars</Text>
+    <Text>
+      { LavaggioStore.getRawState().car_object.post_name }
+      { LavaggioStore.getRawState().fleet[0].post_name}
+     
+    </Text>
+      <List.Section 
+          style={{width:"100%", backgroundColor:"red"}}>
+          <List.Subheader>Tipo de Macchina</List.Subheader>
+          { LavaggioStore.getRawState().fleet.map( (item) => {
+              return(
+                  <List.Item 
+                      title={item.name}
+                      style={{}}
+                      left={() => 
+                          <Image source={mockCarTypes.types[0].image} style={{width:30, height:30}} />
+                      } />
+              )
+          }) }
+      </List.Section>
     <Button
             mode="outlined"
             style={[{ marginTop: 40 }]}
             onPress={() => navigation.navigate("AddCar")}
-          >Adicionar
+          > Adicionar
     </Button>
   </View>
 
@@ -138,3 +157,35 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
+const mockCarTypes = {
+  "types": 
+  [ 
+      {
+          "name":"Micro",
+          "image":require("../images/car-types/micro-car-13314.png")
+      },{
+          "name":"Hatchback",
+          "image":require("../images/car-types/hatchback-car-13312.png")
+      },{
+          "name":"Sedan",
+          "image":require("../images/car-types/sedan-car-13311.png")
+      },{
+          "name":"SUV",
+          "image":require("../images/car-types/suv-car-13321.png")
+      },{
+          "name":"Pickup",
+          "image":require("../images/car-types/pickup-car-13322.png")
+      },{
+          "name":"Van",
+          "image":require("../images/car-types/van-truck-car-13329.png")
+      },{
+          "name":"Cabriolet",
+          "image":require("../images/car-types/cabriolet-car-13316.png")
+      },{
+          "name":"Bus",
+          "image":require("../images/car-types/bus-13331.png")
+      }
+
+  ]
+}

@@ -8,7 +8,7 @@ import { ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
-import { WizardStore } from "../storage";
+import { LavaggioStore } from "../storage";
 
 
 Notifications.setNotificationHandler({
@@ -24,13 +24,13 @@ const soundStart = require("../sounds/crank-2.mp3")
 const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
 const soundRing = require("../sounds/telephone-ring-1.mp3")
 
-let pomodoroTime = WizardStore.getRawState().session_object.pomodoroTime;
-let restTime=WizardStore.getRawState().session_object.restTime;
+let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
+let restTime=LavaggioStore.getRawState().session_object.restTime;
 
 const TaskPanel = ( (rdata) =>{
   return (
     <View>
-      <Text>Tarefa { WizardStore.getRawState().post_object.post_title }</Text>
+      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
     </View>
   )
 })
@@ -68,7 +68,7 @@ export default function App() {
       url: 'https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/booking',
       // params: {
       //   action: 'load_session',
-      //   // t: WizardStore.getRawState().token
+      //   // t: LavaggioStore.getRawState().token
       // },
     };
     console.log("options", options)
@@ -80,7 +80,7 @@ export default function App() {
       // let post_status = r.data.post_object.post_status;
       // console.log("secsP", secsP);
       // console.log("post_status", post_status);
-      WizardStore.update((s)=>{
+      LavaggioStore.update((s)=>{
         s.post_object = r.data[0]
       })
     }).catch(function (error) {
@@ -99,12 +99,12 @@ export default function App() {
           async () => {
             await load_session()
           }} />
-        <Text>Name: {WizardStore.getRawState().user.username} | {WizardStore.getRawState().user.id}</Text>
-        <Text>{WizardStore.getRawState().post_object.post_status ? WizardStore.getRawState().post_object.post_status + " | " + WizardStore.getRawState().post_object.post_title : "loading..."}</Text>
-        {/* <Text>TT{ WizardStore.getRawState().post_object["post_status"] }</Text> */}
+        <Text>Name: {LavaggioStore.getRawState().user.username} | {LavaggioStore.getRawState().user.id}</Text>
+        <Text>{LavaggioStore.getRawState().post_object.post_status ? LavaggioStore.getRawState().post_object.post_status + " | " + LavaggioStore.getRawState().post_object.post_title : "loading..."}</Text>
+        {/* <Text>TT{ LavaggioStore.getRawState().post_object["post_status"] }</Text> */}
         {/* <TaskPanel /> */}
         {/* <Text>Tarefa { rdata[0].id }</Text> */}
-        <Text>{WizardStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
+        <Text>{LavaggioStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>

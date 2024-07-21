@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Alert, Image } from "react-native";
 import Constants from "expo-constants";
 
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
-import { WizardStore } from "../storage";
+import { LavaggioStore } from "../storage";
 import { Button, MD3Colors, ProgressBar, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 import axios from "axios"; 
@@ -33,12 +33,12 @@ export default function LoginScreen({ navigation }) {
     register,
 
     formState: { errors },
-  } = useForm({ defaultValues: WizardStore.useState((s) => s) });
+  } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
   const isFocused = useIsFocused();
 
   useEffect(() => {
     isFocused &&
-      WizardStore.update((s) => {
+      LavaggioStore.update((s) => {
         s.progress = 0;
       });
       
@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }) {
       .then(function (r2) {
           console.log(r2.data);
           console.log("r2.data", r2.data)
-          WizardStore.update((s)=> {
+          LavaggioStore.update((s)=> {
             s.token = token;
             s.user = r2.data;
             let toast = Toast.show('Bem vindo ' + r2.data.username, { position: 0 });
@@ -93,7 +93,7 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <ProgressBar
         style={styles.progressBar}
-        progress={WizardStore.getRawState().progress}
+        progress={LavaggioStore.getRawState().progress}
         color={MD3Colors.primary60}
       />
       <View style={{ paddingHorizontal: 16 }}>

@@ -52,37 +52,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDD',
     alignItems: 'center',
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  countdownCircleTimer: {
-    width:"1000px",
-    backgroundColor: "#09d",
-  },
-  buttonFloat: {
-    position: "absolute",
-    zIndex: 10,
-    width: 500,
-    height: 300,
-    backgroundColor: "transparent",
-  },
-  mascotImage: {
-    width: "100px",
-    height: "100px",
-  },
-  mascotText: {
-    padding:"10px",
-    margin:"10px",
-    width:"100px",
-    height:"100px",
-    borderRadius:5,
-    backgroundColor:"#EEE",
-  },
-  titleText: {
-    fontSize: 50,
-    fontWeight: 'bold',
-  },
 });
