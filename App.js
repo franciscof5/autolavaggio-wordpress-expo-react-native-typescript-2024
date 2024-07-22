@@ -30,20 +30,18 @@ export default function App() {
 
   return (
     <Provider store={store}>
-
-    <PaperProvider>
-      <RootSiblingParent>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="HomeMap">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="HomeMap" component={HomeMap} />
-            <Stack.Screen name="AddCar" component={AddCar} />
-            <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </RootSiblingParent>
-    </PaperProvider>
-
+      <PaperProvider>
+        <RootSiblingParent>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="HomeMap">
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="HomeMap" component={HomeMap} />
+              <Stack.Screen name="AddCar" component={AddCar} />
+              <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </RootSiblingParent>
+      </PaperProvider>
     </Provider>
   );
 }
