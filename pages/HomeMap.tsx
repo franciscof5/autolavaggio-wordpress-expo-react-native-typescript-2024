@@ -10,6 +10,9 @@ import * as Location from "expo-location";
 //import GetLocation from 'react-native-get-location';
 import { useIsFocused } from "@react-navigation/native";
 
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../features/counter/counterSlice'
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -48,36 +51,50 @@ export default function HomeMapTabs({ navigation }) {
     });
   }, [navigation]);
   const isFocused = useIsFocused();
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
 
   const CarsRoute = () => 
-  <View> 
-    <Text>Your Cars</Text>
-    <Text>
-      { LavaggioStore.getRawState().car_object.post_name }
-      { LavaggioStore.getRawState().fleet[0].post_name}
-     
-    </Text>
-      <List.Section 
-          style={{width:"100%", backgroundColor:"red"}}>
-          <List.Subheader>Tipo de Macchina</List.Subheader>
-          { LavaggioStore.getRawState().fleet.map( (item) => {
-              return(
-                  <List.Item 
-                      title={item.name}
-                      style={{}}
-                      left={() => 
-                          <Image source={mockCarTypes.types[0].image} style={{width:30, height:30}} />
-                      } />
-              )
-          }) }
-      </List.Section>
-    <Button
-            mode="outlined"
-            style={[{ marginTop: 40 }]}
-            onPress={() => navigation.navigate("AddCar")}
-          > Adicionar
-    </Button>
-  </View>
+    <View> 
+      <Text>Your Cars</Text>
+      <Text>
+        { LavaggioStore.getRawState().car_object.post_name }
+        { LavaggioStore.getRawState().fleet[0].post_name}
+      
+      </Text>
+        <List.Section 
+            style={{width:"100%", backgroundColor:"red"}}>
+            <List.Subheader>Tipo de Macchina</List.Subheader>
+            { LavaggioStore.getRawState().fleet.map( (item) => {
+                return(
+                    <List.Item 
+                        title={item.name}
+                        style={{}}
+                        left={() => 
+                            <Image source={mockCarTypes.types[0].image} style={{width:30, height:30}} />
+                        } />
+                )
+            }) }
+        </List.Section>
+      <Button
+              mode="outlined"
+              style={[{ marginTop: 40 }]}
+              onPress={() => navigation.navigate("AddCar")}
+            > Adicionar
+      </Button>
+    </View>
+
+  const Counter = () => 
+    <View>
+      <Text>V: {count}</Text>
+      <Button
+        onPress={() => dispatch(increment())}
+        >Inc</Button>
+      <Button
+        onPress={() => dispatch(decrement())}
+        >Dec</Button>
+    </View>
+
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -91,7 +108,7 @@ export default function HomeMapTabs({ navigation }) {
     maps: HomeAppMap,
     cars: CarsRoute,
     recents: RecentsRoute,
-    notifications: NotificationsRoute,
+    notifications: Counter,
   });
 
   return (

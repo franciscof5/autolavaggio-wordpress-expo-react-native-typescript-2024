@@ -12,6 +12,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
 
+import { store } from './store'
+import { Provider } from 'react-redux'
+
 const Stack = createStackNavigator();
 
 import Login from "./pages/Login"
@@ -26,6 +29,8 @@ export default function App() {
   const responseListener = useRef();
 
   return (
+    <Provider store={store}>
+
     <PaperProvider>
       <RootSiblingParent>
         <NavigationContainer>
@@ -38,6 +43,8 @@ export default function App() {
         </NavigationContainer>
       </RootSiblingParent>
     </PaperProvider>
+
+    </Provider>
   );
 }
 
