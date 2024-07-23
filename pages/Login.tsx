@@ -9,8 +9,8 @@ import { useIsFocused } from "@react-navigation/native";
 import axios from "axios"; 
 import Toast from 'react-native-root-toast';
 
-const logo = require("../images/gio-logo.png")
-const lavagem1 = require("../images/foto-lavagem-1.jpg")
+const logo = require("../assets/images/gio-logo.png")
+const lavagem1 = require("../assets/images/foto-lavagem-1.jpg")
 
 //import { jsonFieldsChecklist } from "../assets/jsonFieldsChecklist.json"
 //import { data } from "../assets/data.json"

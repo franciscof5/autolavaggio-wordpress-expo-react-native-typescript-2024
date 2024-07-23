@@ -11,10 +11,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
 
-import { store } from './store'
+import { store } from './store/store'
 import { Provider, useSelector } from 'react-redux'
 
-import { getVehicles } from "./features/vehicle/vehicleSlice";
+//import { getVehicles } from "./store/vehicle/vehicleSlice";
 
 const Stack = createStackNavigator();
 

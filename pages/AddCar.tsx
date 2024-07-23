@@ -22,28 +22,28 @@ const mockCarTypes = {
     [ 
         {
             "name":"Micro",
-            "image":require("../images/car-types/micro-car-13314.png")
+            "image":require("../assets/images/car-types/micro-car-13314.png")
         },{
             "name":"Hatchback",
-            "image":require("../images/car-types/hatchback-car-13312.png")
+            "image":require("../assets/images/car-types/hatchback-car-13312.png")
         },{
             "name":"Sedan",
-            "image":require("../images/car-types/sedan-car-13311.png")
+            "image":require("../assets/images/car-types/sedan-car-13311.png")
         },{
             "name":"SUV",
-            "image":require("../images/car-types/suv-car-13321.png")
+            "image":require("../assets/images/car-types/suv-car-13321.png")
         },{
             "name":"Pickup",
-            "image":require("../images/car-types/pickup-car-13322.png")
+            "image":require("../assets/images/car-types/pickup-car-13322.png")
         },{
             "name":"Van",
-            "image":require("../images/car-types/van-truck-car-13329.png")
+            "image":require("../assets/images/car-types/van-truck-car-13329.png")
         },{
             "name":"Cabriolet",
-            "image":require("../images/car-types/cabriolet-car-13316.png")
+            "image":require("../assets/images/car-types/cabriolet-car-13316.png")
         },{
             "name":"Bus",
-            "image":require("../images/car-types/bus-13331.png")
+            "image":require("../assets/images/car-types/bus-13331.png")
         }
 
     ]

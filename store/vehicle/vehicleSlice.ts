@@ -59,22 +59,22 @@ export const vehicleSlice = createSlice({
         state.ID += action.payload
       },
     },
-    extraReducers: (builder) => {
-        builder
-          .addCase(getVehicles.pending, (state, action) => {
-          state.isLoading = true;
-          state.hasError = false;
-        })
-          .addCase(getVehicles.fulfilled, (state, action) => {
-            state.ID = action.payload;
-            state.isLoading = false;
-            state.hasError = false
-          })
-          .addCase(getVehicles.rejected, (state, action) => {
-            state.hasError = true
-            state.isLoading = false;
-          })
-      }
+    // extraReducers: (builder) => {
+    //     builder
+    //       .addCase(getVehicles.pending, (state, action) => {
+    //       state.isLoading = true;
+    //       state.hasError = false;
+    //     })
+    //       .addCase(getVehicles.fulfilled, (state, action) => {
+    //         state.ID = action.payload;
+    //         state.isLoading = false;
+    //         state.hasError = false
+    //       })
+    //       .addCase(getVehicles.rejected, (state, action) => {
+    //         state.hasError = true
+    //         state.isLoading = false;
+    //       })
+    //   }
 })
 
 // Selectors

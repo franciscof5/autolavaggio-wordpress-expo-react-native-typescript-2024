@@ -11,7 +11,7 @@ import * as Location from "expo-location";
 import { useIsFocused } from "@react-navigation/native";
 
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from '../features/counter/counterSlice'
+// import { decrement, increment } from '../store/counter/counterSlice'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -21,10 +21,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const foca = require("../images/mascote_foca.png")
-const soundStart = require("../sounds/crank-2.mp3")
-const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
-const soundRing = require("../sounds/telephone-ring-1.mp3")
+// const foca = require("../assets/images/mascote_foca.png")
+// const soundStart = require("../sounds/crank-2.mp3")
+// const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
+// const soundRing = require("../sounds/telephone-ring-1.mp3")
 
 let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
 let restTime=LavaggioStore.getRawState().session_object.restTime;
@@ -180,28 +180,28 @@ const mockCarTypes = {
   [ 
       {
           "name":"Micro",
-          "image":require("../images/car-types/micro-car-13314.png")
+          "image":require("../assets/images/car-types/micro-car-13314.png")
       },{
           "name":"Hatchback",
-          "image":require("../images/car-types/hatchback-car-13312.png")
+          "image":require("../assets/images/car-types/hatchback-car-13312.png")
       },{
           "name":"Sedan",
-          "image":require("../images/car-types/sedan-car-13311.png")
+          "image":require("../assets/images/car-types/sedan-car-13311.png")
       },{
           "name":"SUV",
-          "image":require("../images/car-types/suv-car-13321.png")
+          "image":require("../assets/images/car-types/suv-car-13321.png")
       },{
           "name":"Pickup",
-          "image":require("../images/car-types/pickup-car-13322.png")
+          "image":require("../assets/images/car-types/pickup-car-13322.png")
       },{
           "name":"Van",
-          "image":require("../images/car-types/van-truck-car-13329.png")
+          "image":require("../assets/images/car-types/van-truck-car-13329.png")
       },{
           "name":"Cabriolet",
-          "image":require("../images/car-types/cabriolet-car-13316.png")
+          "image":require("../assets/images/car-types/cabriolet-car-13316.png")
       },{
           "name":"Bus",
-          "image":require("../images/car-types/bus-13331.png")
+          "image":require("../assets/images/car-types/bus-13331.png")
       }
 
   ]
