@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, React, Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert, Title } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Audio } from 'expo-av';
 import { AppRegistry } from 'react-native';
 import { ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
@@ -13,7 +12,9 @@ import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { store } from './store'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
+
+import { getVehicles } from "./features/vehicle/vehicleSlice";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
 
+  //const vehiclesss = useSelector(getVehicles);
   return (
     <Provider store={store}>
       <PaperProvider>

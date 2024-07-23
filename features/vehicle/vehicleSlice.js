@@ -1,4 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios'
+
+export const getVehicles = createAsyncThunk(
+    "vehicleList/getVehicles", 
+    async () => {
+      try {
+        const response = await axios.get(
+          "https://www.lavaggioapp.it/wp-json/wp/v2/vehicle"
+        );
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+);
 
 const initialState = {
     ID:0,
@@ -44,7 +59,29 @@ export const vehicleSlice = createSlice({
         state.ID += action.payload
       },
     },
+    extraReducers: (builder) => {
+        builder
+          .addCase(getVehicles.pending, (state, action) => {
+          state.isLoading = true;
+          state.hasError = false;
+        })
+          .addCase(getVehicles.fulfilled, (state, action) => {
+            state.ID = action.payload;
+            state.isLoading = false;
+            state.hasError = false
+          })
+          .addCase(getVehicles.rejected, (state, action) => {
+            state.hasError = true
+            state.isLoading = false;
+          })
+      }
 })
+
+// Selectors
+export const selectCompanies = state => state.companyList.company;
+export const selectLoadingState = state => state.companyList.isLoading;
+export const selectErrorState = state => state.companyList.hasError;
+
 
 // Action creators are generated for each case reducer function
 export const { increment, decrement, incrementByAmount } = vehicleSlice.actions
