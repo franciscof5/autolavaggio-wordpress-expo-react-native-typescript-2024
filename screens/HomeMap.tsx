@@ -12,7 +12,9 @@ import { useIsFocused } from "@react-navigation/native";
 
 import { useSelector, useDispatch } from 'react-redux'
 // import { decrement, increment } from '../store/counter/counterSlice'
-import { getVehicles } from '../store/vehicle/vehicleSlice-offline';
+import { getVehicles } from '../api/vehicle/vehicleSlice-offline';
+import ListVehicles from './Vehicles/ListVehicles'
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -33,6 +35,7 @@ let restTime=LavaggioStore.getRawState().session_object.restTime;
 const TaskPanel = ( (rdata) =>{
   return (
     <View>
+      <ListVehicles>Asd</ListVehicles>
       <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
     </View>
   )
@@ -57,7 +60,8 @@ export default function HomeMapTabs({ navigation }) {
 
   const CarsRoute = () => 
     <View> 
-      <Text>Your Cars</Text>
+      <ListVehicles />
+      <Text>Your Cars!!!!!</Text>
       <Text>
         { LavaggioStore.getRawState().car_object.post_name }
         { LavaggioStore.getRawState().fleet[0].post_name}

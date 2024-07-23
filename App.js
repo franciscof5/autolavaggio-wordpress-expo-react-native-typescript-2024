@@ -11,17 +11,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
 
-import { store } from './store/store'
+import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
 
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
 
 const Stack = createStackNavigator();
 
-import Login from "./pages/Login"
-import HomeMap from "./pages/HomeMap";
-import AddCar from "./pages/AddCar"
-import AddCarDetails from "./pages/AddCarDetails"
+import Login from "./screens/Login"
+import HomeMap from "./screens/HomeMap";
+import AddCar from "./screens/AddCar"
+import AddCarDetails from "./screens/AddCarDetails"
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');

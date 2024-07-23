@@ -10,6 +10,7 @@ const vehicleApi = createApi({
       query: () => "/vehicle",
       providesTags: ["vehicle"],
       transformResponse: (response: Vehicle[]) => {
+        console.log("response vehicle: ", response[0]);
         return response.reverse();
       },
     }),
