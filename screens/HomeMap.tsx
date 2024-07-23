@@ -12,6 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import { useSelector, useDispatch } from 'react-redux'
 // import { decrement, increment } from '../store/counter/counterSlice'
+import { getVehicles } from '../store/vehicle/vehicleSlice-offline';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -51,8 +52,8 @@ export default function HomeMapTabs({ navigation }) {
     });
   }, [navigation]);
   const isFocused = useIsFocused();
-  const count = useSelector((state) => state.counter.value)
-  const dispatch = useDispatch()
+  // const count = useSelector((state) => state.counter.value)
+  // const dispatch = useDispatch()
 
   const CarsRoute = () => 
     <View> 
@@ -65,11 +66,13 @@ export default function HomeMapTabs({ navigation }) {
         <List.Section 
             style={{width:"100%", backgroundColor:"red"}}>
             <List.Subheader>Tipo de Macchina</List.Subheader>
+            
             { LavaggioStore.getRawState().fleet.map( (item) => {
                 return(
                     <List.Item 
                         title={item.name}
                         style={{}}
+                        key={item.ID+Math.random()}
                         left={() => 
                             <Image source={mockCarTypes.types[0].image} style={{width:30, height:30}} />
                         } />
