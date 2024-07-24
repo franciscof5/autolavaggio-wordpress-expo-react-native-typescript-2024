@@ -4,7 +4,7 @@ import vehicleApi from "../../api/vehicle/vehicleApi";
 import LoadingModal from "../LoadingModal";
 
 const ListVehicles = () => {
-  const { data, error, isError, isLoading } = vehicleApi.useGetUsersQuery();
+  const { data, error, isError, isLoading } = vehicleApi.useGetVehiclesQuery();
 
   return (
     <View style={styles.container}>
@@ -18,8 +18,8 @@ const ListVehicles = () => {
             return (
               <View style={styles.listItem}>
                 <View style={styles.textContainer}>
-                  <Text style={styles.listItemTitle}>Name: {item.name}</Text>
-                  <Text>Username: {item.username}</Text>
+                  <Text style={styles.listItemTitle}>{item.title.rendered}</Text>
+                  <Text>Username: {item.slug}</Text>
                 </View>
               </View>
             );

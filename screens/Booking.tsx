@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Audio } from 'expo-av';
 import { AppRegistry } from 'react-native';
 import { ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
@@ -18,22 +17,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-const foca = require("../images/mascote_foca.png")
-const soundStart = require("../sounds/crank-2.mp3")
-const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
-const soundRing = require("../sounds/telephone-ring-1.mp3")
-
-let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
-let restTime=LavaggioStore.getRawState().session_object.restTime;
-
-const TaskPanel = ( (rdata) =>{
-  return (
-    <View>
-      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
-    </View>
-  )
-})
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -102,7 +85,6 @@ export default function App() {
         <Text>Name: {LavaggioStore.getRawState().user.username} | {LavaggioStore.getRawState().user.id}</Text>
         <Text>{LavaggioStore.getRawState().post_object.post_status ? LavaggioStore.getRawState().post_object.post_status + " | " + LavaggioStore.getRawState().post_object.post_title : "loading..."}</Text>
         {/* <Text>TT{ LavaggioStore.getRawState().post_object["post_status"] }</Text> */}
-        {/* <TaskPanel /> */}
         {/* <Text>Tarefa { rdata[0].id }</Text> */}
         <Text>{LavaggioStore.getRawState().post_object.title.rendered } - Your expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>

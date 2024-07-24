@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 import { AppRegistry } from 'react-native';
 import { MD3LightTheme as DefaultTheme,
-        List, Chip, Button, ProgressBar, MD3Colors, PaperProvider } from 'react-native-paper';
+        List, Chip, Button, ProgressBar, 
+        MD3Colors, PaperProvider,
+        TextInput } from 'react-native-paper';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import axios from 'axios';
@@ -16,6 +18,9 @@ import {
     useFieldArray,
 } from "react-hook-form";
 import { useIsFocused } from "@react-navigation/native";
+
+import vehicleApi from "../api/vehicle/vehicleApi";
+
 
 const mockCarTypes = {
     "types": 
@@ -48,14 +53,6 @@ const mockCarTypes = {
 
     ]
 }
-
-const TaskPanel = ( (rdata) =>{
-  return (
-    <View>
-      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
-    </View>
-  )
-})
 
 export default function AddCar({ navigation }) {
   // keep back arrow from showing
@@ -93,6 +90,18 @@ export default function AddCar({ navigation }) {
     });
   }, [isFocused, replace]);
 
+  const [addUser, { data, isLoading }] = vehicleApi.useAddVehicleMutation();
+
+  const handleSave = () => {
+    console.log("HandleSave")
+    // Keyboard.dismiss();
+    addUser({
+      id: Math.ceil(Math.random() * 100),
+      post_name: "Random " + Math.ceil(Math.random() * 100),
+    });
+    // setName("");
+    // setUserName("");
+  };
   const onSubmit = (data) => {
     //axios.get("http://app.trcmobile.com.br/ws/checklist/new_checklist.php")
     //.then((r)=> {
@@ -112,6 +121,16 @@ export default function AddCar({ navigation }) {
     <PaperProvider>
       <ScrollView style={styles.container}>
         <StatusBar style="auto" />
+        <TextInput id='vehicleName' placeholder='Nome do Carro' />
+        {/* <Button title="Save" onPress={handleSave} /> */}
+        <Button
+          title="Submit"
+          mode="outlined"
+          style={styles.button}
+          onPress={handleSave}
+        >
+          Enviar
+        </Button>
         <List.Section 
             style={{width:"100%"}}>
             <List.Subheader>Tipo de Macchina</List.Subheader>
@@ -119,6 +138,7 @@ export default function AddCar({ navigation }) {
                 return(
                     <List.Item 
                         title={item.name}
+                        key={Math.random()*10}
                         style={{}}
                         left={() => 
                             <Image source={item.image} style={{width:100, height:100}} />
@@ -134,14 +154,7 @@ export default function AddCar({ navigation }) {
         >
           VOLTAR
         </Button>
-        <Button
-          title="Submit"
-          mode="outlined"
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}
-        >
-          PRÓXIMO PASSO
-        </Button>
+        
       </ScrollView>
     </PaperProvider>
   );

@@ -6,7 +6,7 @@ const vehicleApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "https://www.lavaggioapp.it/wp-json/wp/v2/" }),
   tagTypes: ["vehicle"],
   endpoints: (builder) => ({
-    getUsers: builder.query<Vehicle[], void>({
+    getVehicles: builder.query<Vehicle[], void>({
       query: () => "/vehicle",
       providesTags: ["vehicle"],
       transformResponse: (response: Vehicle[]) => {
@@ -14,10 +14,10 @@ const vehicleApi = createApi({
         return response.reverse();
       },
     }),
-    getUserById: builder.query<Vehicle, number>({
+    getVehicleById: builder.query<Vehicle, number>({
       query: (id) => `/users/${id}`,
     }),
-    addUser: builder.mutation<Vehicle, Vehicle>({
+    addVehicle: builder.mutation<Vehicle, Vehicle>({
       query: (user) => ({
         url: "/vehicle",
         body: user,
@@ -25,7 +25,7 @@ const vehicleApi = createApi({
       }),
       invalidatesTags: ["vehicle"],
     }),
-    updateUser: builder.mutation<Vehicle, Vehicle>({
+    updateVehicle: builder.mutation<Vehicle, Vehicle>({
       query: (user) => ({
         url: `/vehicle/${user.id}`,
         body: user,
@@ -33,7 +33,7 @@ const vehicleApi = createApi({
       }),
       invalidatesTags: ["vehicle"],
     }),
-    deleteUser: builder.mutation<{}, number>({
+    deleteVehicle: builder.mutation<{}, number>({
       query: (id) => ({
         url: `/vehicle/${id}`,
         method: "DELETE",

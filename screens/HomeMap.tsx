@@ -32,15 +32,6 @@ Notifications.setNotificationHandler({
 let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
 let restTime=LavaggioStore.getRawState().session_object.restTime;
 
-const TaskPanel = ( (rdata) =>{
-  return (
-    <View>
-      <ListVehicles>Asd</ListVehicles>
-      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
-    </View>
-  )
-})
-
 const MusicRoute = () => <Text>Music</Text>;
 
 const RecentsRoute = () => <Text>Recents</Text>;
@@ -60,29 +51,8 @@ export default function HomeMapTabs({ navigation }) {
 
   const CarsRoute = () => 
     <View> 
-      <ListVehicles />
       <Text>Your Cars!!!!!</Text>
-      <Text>
-        { LavaggioStore.getRawState().car_object.post_name }
-        { LavaggioStore.getRawState().fleet[0].post_name}
-      
-      </Text>
-        <List.Section 
-            style={{width:"100%", backgroundColor:"red"}}>
-            <List.Subheader>Tipo de Macchina</List.Subheader>
-            
-            { LavaggioStore.getRawState().fleet.map( (item) => {
-                return(
-                    <List.Item 
-                        title={item.name}
-                        style={{}}
-                        key={item.ID+Math.random()}
-                        left={() => 
-                            <Image source={mockCarTypes.types[0].image} style={{width:30, height:30}} />
-                        } />
-                )
-            }) }
-        </List.Section>
+      <ListVehicles />
       <Button
               mode="outlined"
               style={[{ marginTop: 40 }]}
