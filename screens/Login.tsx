@@ -46,11 +46,15 @@ export default function LoginScreen({ navigation }) {
       
   }, [isFocused]);
 
-  const { data, error, isError, isLoading } = currentUserApi.useLoginQuery();
+  //const { data, error, isError, isLoading } = currentUserApi.useLoginQuery();
+  const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
   // const { data, error, isLoading } = useLoginQuery('/token?username=foca&password=931777')
   const onSubmit = () => {
     console.log("onSubmit")
-    
+    loginUser({
+      id: Math.ceil(Math.random() * 100),
+      email: "teste@teste.com",
+    });
   };
 
   return (
