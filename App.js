@@ -35,7 +35,7 @@ export default function App() {
       <PaperProvider>
         <RootSiblingParent>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="HomeMap">
+            <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="HomeMap" component={HomeMap} />
               <Stack.Screen name="AddCar" component={AddCar} />

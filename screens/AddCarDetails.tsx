@@ -49,14 +49,6 @@ const mockCarTypes = {
     ]
 }
 
-const TaskPanel = ( (rdata) =>{
-  return (
-    <View>
-      <Text>Tarefa { LavaggioStore.getRawState().post_object.post_title }</Text>
-    </View>
-  )
-})
-
 export default function AddCarDetails({ navigation }) {
   // keep back arrow from showing
   React.useLayoutEffect(() => {

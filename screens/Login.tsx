@@ -9,6 +9,8 @@ import { useIsFocused } from "@react-navigation/native";
 import axios from "axios"; 
 import Toast from 'react-native-root-toast';
 
+import { useLoginQuery, currentUserApi } from "../api/currentUserApi/currentUserApi"
+
 const logo = require("../assets/images/gio-logo.png")
 const lavagem1 = require("../assets/images/foto-lavagem-1.jpg")
 
@@ -44,49 +46,11 @@ export default function LoginScreen({ navigation }) {
       
   }, [isFocused]);
 
-  const onSubmit = (data) => {
+  const { data, error, isError, isLoading } = currentUserApi.useLoginQuery();
+  // const { data, error, isLoading } = useLoginQuery('/token?username=foca&password=931777')
+  const onSubmit = () => {
     console.log("onSubmit")
-    let datasend_login = {
-      username: "foca",
-      password: "931777"
-    }
-    axios.post("https://autolavaggio.franciscomatelli.com.br/wp-json/jwt-auth/v1/token", datasend_login)
-    .then((r)=> {
-      let token = r.data.token;
-      console.log("token", token);
-      
-      var options = {
-        method: 'POST',
-        url: 'https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/users/me',
-        headers: {
-          Authorization: 'Bearer ' + token,
-        }
-      };
-      
-      axios.request(options)
-      .then(function (r2) {
-          console.log(r2.data);
-          console.log("r2.data", r2.data)
-          LavaggioStore.update((s)=> {
-            s.token = token;
-            s.user = r2.data;
-            let toast = Toast.show('Bem vindo ' + r2.data.username, { position: 0 });
-          })
-          navigation.navigate("HomeMap");
-      }).catch(function (error) {
-        let toast = Toast.show('Erro ao recuperar dados do usuário', { position: 0 });
-        console.error(error);
-      });
-
-      // axios.post("https://autolavaggio.franciscomatelli.com.br/wp-json/wp/v2/users/me", datasend_tokenme)
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    
   };
 
   return (
@@ -98,6 +62,17 @@ export default function LoginScreen({ navigation }) {
       />
       <View style={{ paddingHorizontal: 16 }}>
         <Image source={logo}  style={styles.logoStyle}/>
+        <View>
+            {error ? (
+            <Text>Oh no, there was an error {JSON.stringify(error.data)}</Text>
+          ) : isLoading ? (
+            <Text>Loading...</Text>
+          ) : data ? (
+            <View>
+              <Text> { data.token }</Text>
+            </View>
+          ) : null}
+        </View>
         <View style={styles.formEntry}>
           <Controller
             control={control}
