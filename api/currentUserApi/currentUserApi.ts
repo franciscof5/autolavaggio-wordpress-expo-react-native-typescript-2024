@@ -6,8 +6,8 @@ export const currentUserApi = createApi({
   endpoints: (builder) => ({
     login: builder.query({
       query: (name) => ({
-        method: "POST",
-        url: `/token?username=foca&password=931777`,
+        //method: "POST",
+        url: `/`,
       })
       // ,
       // transformResponse: (response) => {
@@ -17,7 +17,8 @@ export const currentUserApi = createApi({
     }),
     loginUser: builder.mutation({
       query: (user) => ({
-        url: `/token?username=foca&password=931777`,
+        url: '/token?username='+user.username+'&password='+user.password,
+        // url: '/token?username=foca&password=931777',
         body: user,
         method: "POST",
       }),

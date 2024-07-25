@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Alert, Image } from "react-native";
-import Constants from "expo-constants";
-
-import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { LavaggioStore } from "../storage";
 import { Button, MD3Colors, ProgressBar, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
-import axios from "axios"; 
-import Toast from 'react-native-root-toast';
-
-import { useLoginQuery, currentUserApi } from "../api/currentUserApi/currentUserApi"
+// import Toast from 'react-native-root-toast';
+import LoadingModal from "./LoadingModal";
+import currentUserApi from "../api/currentUserApi/currentUserApi"
 
 const logo = require("../assets/images/gio-logo.png")
 const lavagem1 = require("../assets/images/foto-lavagem-1.jpg")
 
-//import { jsonFieldsChecklist } from "../assets/jsonFieldsChecklist.json"
-//import { data } from "../assets/data.json"
-
-
 export default function LoginScreen({ navigation }) {
-  //const jsonFieldsChecklist = require("../assets/checklistApiRetorno.json");
-  //const [fieldsArea, setFieldsArea] = useState();
-  //const data = require('../assets/data.json');
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
   // keep back arrow from showing
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,111 +26,113 @@ export default function LoginScreen({ navigation }) {
     handleSubmit,
     control,
     register,
-
     formState: { errors },
   } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    isFocused &&
-      LavaggioStore.update((s) => {
-        s.progress = 0;
-      });
-      
-  }, [isFocused]);
-
-  //const { data, error, isError, isLoading } = currentUserApi.useLoginQuery();
-  const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
-  // const { data, error, isLoading } = useLoginQuery('/token?username=foca&password=931777')
   const onSubmit = () => {
-    console.log("onSubmit")
+    console.log("onSubmit", username, password)
     loginUser({
       id: Math.ceil(Math.random() * 100),
-      email: "teste@teste.com",
-    });
+      username: username,
+      password: password,
+    })
+    .then((resp)=>{
+      console.log("resp", resp.data.token);
+      if(resp.data.token) {
+        console.log("ENTROU")
+        navigation.navigate("HomeMap")
+      }
+    });    
   };
 
   return (
     <View style={styles.container}>
-      <ProgressBar
-        style={styles.progressBar}
-        progress={LavaggioStore.getRawState().progress}
-        color={MD3Colors.primary60}
-      />
-      <View style={{ paddingHorizontal: 16 }}>
-        <Image source={logo}  style={styles.logoStyle}/>
+      {isLoading ? (
+        <LoadingModal isLoading={isLoading} />
+      ) : (
         <View>
-            {error ? (
-            <Text>Oh no, there was an error {JSON.stringify(error.data)}</Text>
-          ) : isLoading ? (
-            <Text>Loading...</Text>
-          ) : data ? (
-            <View>
-              <Text> { data.token }</Text>
-            </View>
-          ) : null}
-        </View>
-        <View style={styles.formEntry}>
-          <Controller
-            control={control}
-            rules={{
-              //required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                mode="outlined"
-                label="Nomeutente"
-                placeholder="Digite nomeutente"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
+        <ProgressBar
+          style={styles.progressBar}
+          progress={LavaggioStore.getRawState().progress}
+          color={MD3Colors.primary60}
+        />
+        <View style={{ paddingHorizontal: 16 }}>
+          <Image source={logo}  style={styles.logoStyle}/>
+          <View>
+              {error ? (
+              <Text>Oh no, there was an error {JSON.stringify(error.data)}</Text>
+            ) : isLoading ? (
+              <Text>Loading...</Text>
+            ) : data ? (
+              <View>
+                <Text> { data.token  ? ( <>Successfull</>) : null }</Text>
+              </View>
+            ) : null}
+          </View>
+          <View style={styles.formEntry}>
+            <Controller
+              control={control}
+              rules={{
+                // required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  mode="outlined"
+                  label="Nomeutente"
+                  placeholder="Digite nomeutente"
+                  onBlur={onBlur}
+                  onChangeText={(value) => setUsername(value)}
+                  value={username}
+                />
+              )}
+              name="username"
+            />
+            {errors.username && (
+              <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
+                Campo obbligatorio.
+              </Text>
             )}
-            name="username"
-          />
-          {errors.username && (
-            <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
-              Campo obbligatorio.
-            </Text>
-          )}
-        </View>
+          </View>
 
-        <View style={[styles.formEntry]}>
-          <Controller
-            control={control}
-            rules={{
-              //required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                mode="outlined"
-                label="Password"
-                placeholder="Digite password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                //keyboardType="numeric"
-              />
+          <View style={[styles.formEntry]}>
+            <Controller
+              control={control}
+              rules={{
+                // required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  mode="outlined"
+                  label="Password"
+                  placeholder="Digite password"
+                  onBlur={onBlur}
+                  onChangeText={(value) => setPassword(value)}
+                  value={password}
+                  secureTextEntry={true}
+                  //keyboardType="numeric"
+                />
+              )}
+              name="password"
+            />
+            {errors.password && (
+              <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
+                Campo obrigatório.
+              </Text>
             )}
-            name="password"
-          />
-          {errors.password && (
-            <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
-              Campo obrigatório.
-            </Text>
-          )}
-        </View>
+          </View>
 
-        <Button
-          onPress={handleSubmit(onSubmit)}
-          mode="outlined"
-          style={styles.button}
-        >
-          ENTRARE
-        </Button>
-      </View>
-      <Image source={lavagem1}  style={styles.imagemLavagem}/>
-        
+          <Button
+            onPress={onSubmit}
+            mode="outlined"
+            style={styles.button}
+          >
+            ENTRARE
+          </Button>
+        </View>
+        <Image source={lavagem1}  style={styles.imagemLavagem}/>
+        </View>
+      )}
     </View>
   );
 }
