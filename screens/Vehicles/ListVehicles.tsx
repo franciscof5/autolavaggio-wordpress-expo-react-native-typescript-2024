@@ -16,14 +16,14 @@ const ListVehicles = () => {
   // const [loginUser, {data2}] = useLoginUserMutation();
   // useSelector((state) => console.log(Object.values(state.currentUserApi.mutations)[0].data ) )
   
-  // Aconst userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
-  
-  const userObject = {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3d3dy5sYXZhZ2dpb2FwcC5pdCIsImlhdCI6MTcyMjE3ODEzOSwibmJmIjoxNzIyMTc4MTM5LCJleHAiOjE3MjI3ODI5MzksImRhdGEiOnsidXNlciI6eyJpZCI6IjE4OSJ9fX0.zToPgSZjdIjY-MmsU_XdH3M_dDgJbgFDAwRd9XlUSCc", 
-    "user_display_name": "Loja da Foca", 
-    "user_email": "foca@pomodoros.com.br", 
-    "user_nicename": "foca"
+  let userObject = {
+    "token": "token", 
+    "user_display_name": "Username", 
+    "user_email": "email@email.com", 
+    "user_nicename": "nicename"
   }
+  userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
+  
   // const [getVehiclesByUserId,{ data, error, isError, isLoading }] = vehicleApi.useGetVehiclesByUserIdQuery();
   // const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
   return (
