@@ -3,6 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const currentUserSlice = createSlice({
   name: "currentUser",
-  initialState: null,
+  initialState: { ID: 223 },
   reducers: {},
 });

@@ -17,8 +17,8 @@ export const currentUserApi = createApi({
     }),
     loginUser: builder.mutation({
       query: (user) => ({
-        url: '/token?username='+user.username+'&password='+user.password,
-        // url: '/token?username=foca&password=931777',
+        // url: '/token?username='+user.username+'&password='+user.password,
+        url: '/token?username=foca&password=931777',
         body: user,
         method: "POST",
       }),
@@ -29,7 +29,7 @@ export const currentUserApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 // export const { useLoginQuery } = currentUserApi
-export default currentUserApi;
+export const { useLoginQuery, useLoginUserMutation } = currentUserApi;
 /*
 console.log("onSubmit")
     let datasend_login = {

@@ -6,7 +6,7 @@ import { Button, MD3Colors, ProgressBar, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 // import Toast from 'react-native-root-toast';
 import LoadingModal from "./LoadingModal";
-import currentUserApi from "../api/currentUserApi/currentUserApi"
+import { useLoginUserMutation } from "../api/currentUserApi/currentUserApi"
 
 const logo = require("../assets/images/gio-logo.png")
 const lavagem1 = require("../assets/images/foto-lavagem-1.jpg")
@@ -14,7 +14,7 @@ const lavagem1 = require("../assets/images/foto-lavagem-1.jpg")
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
+  const [loginUser, { data, error, isError, isLoading }] = useLoginUserMutation();
   // keep back arrow from showing
   React.useLayoutEffect(() => {
     navigation.setOptions({

@@ -16,6 +16,7 @@ import { getVehicles } from '../api/vehicle/vehicleSlice-offline';
 import ListVehicles from './Vehicles/ListVehicles'
 
 
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,

@@ -14,9 +14,17 @@ const vehicleApi = createApi({
         return response.reverse();
       },
     }),
-    getVehicleById: builder.query<Vehicle, number>({
-      query: (id) => `/users/${id}`,
+    getVehiclesByUserId: builder.query<Vehicle, number>({
+      query: (id) => `/vehicle&author=${id}`,
+      providesTags: ["vehicle"],
+      transformResponse: (response: Vehicle[]) => {
+        console.log("response vehicle: ", response);
+        return response;
+      },
     }),
+    // getVehicleById: builder.query<Vehicle, number>({
+    //   query: (id) => `/users/${id}`,
+    // }),
     addVehicle: builder.mutation<Vehicle, Vehicle>({
       query: (user) => ({
         url: "/vehicle",
@@ -25,21 +33,21 @@ const vehicleApi = createApi({
       }),
       invalidatesTags: ["vehicle"],
     }),
-    updateVehicle: builder.mutation<Vehicle, Vehicle>({
-      query: (user) => ({
-        url: `/vehicle/${user.id}`,
-        body: user,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["vehicle"],
-    }),
-    deleteVehicle: builder.mutation<{}, number>({
-      query: (id) => ({
-        url: `/vehicle/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["vehicle"],
-    }),
+    // updateVehicle: builder.mutation<Vehicle, Vehicle>({
+    //   query: (user) => ({
+    //     url: `/vehicle/${user.id}`,
+    //     body: user,
+    //     method: "PATCH",
+    //   }),
+    //   invalidatesTags: ["vehicle"],
+    // }),
+    // deleteVehicle: builder.mutation<{}, number>({
+    //   query: (id) => ({
+    //     url: `/vehicle/${id}`,
+    //     method: "DELETE",
+    //   }),
+    //   invalidatesTags: ["vehicle"],
+    // }),
   }),
 });
 
