@@ -15,12 +15,8 @@ const vehicleApi = createApi({
       },
     }),
     getVehiclesByUserId: builder.query<Vehicle, number>({
-      query: (id) => `/vehicle&author=${id}`,
+      query: (id) => `/vehicle?author=${id}`,
       providesTags: ["vehicle"],
-      transformResponse: (response: Vehicle[]) => {
-        console.log("response vehicle: ", response);
-        return response;
-      },
     }),
     // getVehicleById: builder.query<Vehicle, number>({
     //   query: (id) => `/users/${id}`,
