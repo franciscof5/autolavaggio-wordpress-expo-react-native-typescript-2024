@@ -21,19 +21,22 @@ const vehicleApi = createApi({
     // getVehicleById: builder.query<Vehicle, number>({
     //   query: (id) => `/users/${id}`,
     // }),
-    addVehicle: builder.mutation({
-      query: (vehicle) => ({
-        url: "/vehicles",//?Accept=application%2Fjson&Content-Type=application%2Fjson&title=4%20From%20Inside%20Insonmia&status=publish",
-        method: 'POST',
-        params: vehicle,
-        // {
-        //   title: 'Direto da API2',
-        //   status: 'publish'
-        // },
-        headers: {
-          Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3d3dy5sYXZhZ2dpb2FwcC5pdCIsImlhdCI6MTcyMjE4NTM4MiwibmJmIjoxNzIyMTg1MzgyLCJleHAiOjE3MjI3OTAxODIsImRhdGEiOnsidXNlciI6eyJpZCI6IjE4OSJ9fX0.RY52qyVoN2Ne_6EAudy-3Db0F7nR4qdqQZQhkP2xB5A'
+    addVehicle: builder.mutation<any, any>({
+      query(vehicle) {
+        console.log("AddVech")
+        return {
+          url: "/vehicle",//?Accept=application%2Fjson&Content-Type=application%2Fjson&title=4%20From%20Inside%20Insonmia&status=publish",
+          method: 'POST',
+          params: vehicle,
+          // {
+          //   title: 'Direto da API2',
+          //   status: 'publish'
+          // },
+          headers: {
+            Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3d3dy5sYXZhZ2dpb2FwcC5pdCIsImlhdCI6MTcyMjE4NTM4MiwibmJmIjoxNzIyMTg1MzgyLCJleHAiOjE3MjI3OTAxODIsImRhdGEiOnsidXNlciI6eyJpZCI6IjE4OSJ9fX0.RY52qyVoN2Ne_6EAudy-3Db0F7nR4qdqQZQhkP2xB5A'
+          }
         }
-      }),
+      },
       invalidatesTags: ["vehicle"],
     }),
     // updateVehicle: builder.mutation<Vehicle, Vehicle>({

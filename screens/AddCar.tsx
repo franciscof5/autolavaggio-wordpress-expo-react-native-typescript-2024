@@ -9,6 +9,7 @@ import { MD3LightTheme as DefaultTheme,
 import { useSelector } from 'react-redux'
 import vehicleApi from "../api/vehicle/vehicleApi";
 import LoadingModal from "./LoadingModal";
+import Camera from './Camera'
 
 export default function AddCar({ navigation }) {
   let userObject = {
@@ -26,7 +27,7 @@ export default function AddCar({ navigation }) {
     Keyboard.dismiss();
     let r = await addVehicle(
        {
-          title: 'Direto do handleSave',
+          title: 'Direto do handleSave Asd',
           status: 'publish'
         },
       // {
@@ -63,6 +64,7 @@ export default function AddCar({ navigation }) {
             ) : ( null )
             }
           </View>
+          <Camera />
            </ScrollView>
       )}
     </PaperProvider>
