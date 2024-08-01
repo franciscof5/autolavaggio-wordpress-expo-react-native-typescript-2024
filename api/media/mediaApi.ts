@@ -19,9 +19,9 @@ const mediaApi = createApi({
     // }),
     addMedia: builder.mutation<{}, FormData>({
       query: (media) => {
-        // const formData = new FormData();
-        // formData.append("file", media.localUri);
-        // console.log({ formData, media });
+        const formData = new FormData();
+        formData.append("file", media );
+        console.log({ formData, media });
         //
         // var bodyFormData = new FormData();
         // bodyFormData.append('file', {
@@ -47,15 +47,18 @@ const mediaApi = createApi({
           //   'Content-Disposition': 'attachment; filename="fsff.jpg"'
           // },
           method: 'POST',
+
           headers: {
             'Content-Type': 'image/jpeg',
             'User-Agent': 'insomnia/8.6.1',
             Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3d3dy5sYXZhZ2dpb2FwcC5pdCIsImlhdCI6MTcyMjE4NTM4MiwibmJmIjoxNzIyMTg1MzgyLCJleHAiOjE3MjI3OTAxODIsImRhdGEiOnsidXNlciI6eyJpZCI6IjE4OSJ9fX0.RY52qyVoN2Ne_6EAudy-3Db0F7nR4qdqQZQhkP2xB5A',
+            // Authorization: 'Basic ZnJhbmNpc2NvOiQxNjdGOTQzNQ=',
             Accept: 'application/json',
-            'Content-Disposition': 'attachment; filename="fuzil.jpg"',
+            'Content-Disposition': 'attachment; filename="fuzdsil.jpg"',
             cookie: 'PHPSESSID=efl5pir6pnfu61349l1p22ib7b; '
           },
-          body: media
+          body: media,
+          formData: true,
         }
         
         // data: media.localUri,

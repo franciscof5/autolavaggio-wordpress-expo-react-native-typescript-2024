@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import vehicleApi from "../api/vehicle/vehicleApi";
 import LoadingModal from "./LoadingModal";
 import Camera from './Camera'
+import {ImageOrVideo} from 'react-native-image-crop-picker';
 
 export default function AddCar({ navigation }) {
   let userObject = {

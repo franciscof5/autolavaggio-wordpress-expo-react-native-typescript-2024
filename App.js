@@ -13,7 +13,6 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
-
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
 
 const Stack = createStackNavigator();
@@ -22,7 +21,7 @@ import Login from "./screens/Login"
 import HomeMap from "./screens/HomeMap";
 import AddCar from "./screens/AddCar"
 import AddCarDetails from "./screens/AddCarDetails"
-
+import Profile from './screens/Profile';
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -39,6 +38,7 @@ export default function App() {
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="HomeMap" component={HomeMap} />
               <Stack.Screen name="AddCar" component={AddCar} />
+              <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
             </Stack.Navigator>
           </NavigationContainer>

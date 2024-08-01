@@ -41,7 +41,7 @@ export default function LoginScreen({ navigation }) {
       console.log("resp", resp.data.token);
       if(resp.data.token) {
         console.log("ENTROU")
-        navigation.navigate("AddCar")
+        navigation.navigate("Profile")
       }
     });    
   };
