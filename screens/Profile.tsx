@@ -7,6 +7,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Image,
 } from "react-native";
 // import {ImageOrVideo} from 'react-native-image-crop-picker';
 import {Avatar} from './Avatar';
@@ -23,15 +24,20 @@ const logo = require("../assets/images/gio-logo.png")
 // import ImgToBase64 from 'react-native-image-base64';
 import { useSelector } from 'react-redux'
 // import { currentUserSlice } from '../api/currentUserApi/currentUserSlice';
+import { manipulateAsync, FlipType, SaveFormat, ActionResize } from 'expo-image-manipulator';
 
 export default function Profile() {
   const [image, setImage] = useState(null);
+  const [resImage, setResImage] = useState(null);
+
   const userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
-  const onAvatarChange = async (image) => {
-    const fil = image.assets[0].uri;
-    const base64 = await FileSystem.readAsStringAsync(fil, { encoding: 'base64' });
-    console.log(base64);
-    return;
+  //
+  const uploadImage = async (image) => {
+    // const fil = image;
+    // const filRes = image;
+    // const base64 = await FileSystem.readAsStringAsync(filRes, { encoding: 'base64' });
+    const base64 = image.base64;
+    // console.log("uploadImage", base64);
     const formData = new FormData();
     formData.append('token', userObject.token);
     formData.append('image', base64);
@@ -62,12 +68,55 @@ export default function Profile() {
 
 
   };
-  
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    //   base64: true,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      _rotate90andFlip(result);
+    }
+  };
+
+  const _rotate90andFlip = async (image) => {
+    console.log("AA_rotate90andFlip, image.assets[0].uri", image.assets[0].uri);
+    const manipResult = await manipulateAsync(
+      image.assets[0].uri,
+      //[{ width: 20, {}}]
+      [{ resize: {width:400, height:300} }],
+    //   [{ rotate: 90 }, { flip: FlipType.Vertical }],
+      { compress: 1, format: SaveFormat.PNG, base64:true }
+    )
+    // .then(()=>{   
+        setResImage(manipResult);
+        // console.log("manipResult", manipResult);
+        await uploadImage(manipResult);
+    // });
+  };
+
   return (
     <View style={styles.scroll}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.userRow}>
-        <Text style={styles.file}>Upload CSV File</Text>
+      <View style={styles.container}>
+        <Button title="Pick an image from camera roll" onPress={pickImage} />
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+        </View>
+
+        { resImage ? 
+            <Image source={{ uri: resImage.localUri || resImage.uri }} style={styles.image} />
+            : null
+        }
+
+        {/* <Text style={styles.file}>Upload CSV File</Text>
         <View style={styles.button}>
             <TouchableOpacity>
             <Button
@@ -81,7 +130,7 @@ export default function Profile() {
           onChange={onAvatarChange}
           source={require('./../assets/avatar-placeholder.png')}
         />
-        <UserInfo />
+        <UserInfo /> */}
       </View>
       <View style={styles.content} />
     </View>
@@ -101,6 +150,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: '#d8d8db',
+  },
+  image: {
+    width: 400,
+    height: 300,
   },
 });
 
