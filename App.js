@@ -21,7 +21,8 @@ import Login from "./screens/Login"
 import HomeMap from "./screens/HomeMap";
 import AddCar from "./screens/AddCar"
 import AddCarDetails from "./screens/AddCarDetails"
-import Profile from './screens/Profile';
+import Profile from './screens/Profile/Profile';
+
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);

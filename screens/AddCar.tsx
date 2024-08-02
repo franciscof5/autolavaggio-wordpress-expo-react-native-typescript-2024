@@ -66,6 +66,12 @@ export default function AddCar({ navigation }) {
             }
           </View>
           <Camera />
+          <Text>Das</Text>
+          <Button 
+            onPress={()=>{navigation.navigate("Profile")}} 
+            style={styles.button}
+            title="Profile"
+           />
            </ScrollView>
       )}
     </PaperProvider>
