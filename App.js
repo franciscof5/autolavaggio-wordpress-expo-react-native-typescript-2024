@@ -19,9 +19,8 @@ const Stack = createStackNavigator();
 
 import Login from "./screens/Login"
 import HomeMap from "./screens/HomeMap";
-import AddCar from "./screens/AddCar"
-import AddCarDetails from "./screens/AddCarDetails"
-import Profile from './screens/Profile/Profile';
+import AddVehicle from "./screens/Vehicles/AddVehicle"
+import AddCarDetails from "./screens/Vehicles/AddCarDetails"
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -38,8 +37,7 @@ export default function App() {
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="HomeMap" component={HomeMap} />
-              <Stack.Screen name="AddCar" component={AddCar} />
-              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="AddVehicle" component={AddVehicle} />
               <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
             </Stack.Navigator>
           </NavigationContainer>

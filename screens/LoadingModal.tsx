@@ -12,6 +12,7 @@ const LoadingModal = ({ isLoading }: { isLoading: boolean }) => {
     >
       <View style={styles.modalContainer}>
         <ActivityIndicator size={60} color="#5fc4e3" />
+        <Text style={{color:"#5fc4e3", fontSize:20, marginTop:10}}>Loading...</Text>
       </View>
     </Modal>
   );

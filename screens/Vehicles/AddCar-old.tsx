@@ -7,9 +7,9 @@ import { MD3LightTheme as DefaultTheme,
         TextInput } from 'react-native-paper';
 
 import { useSelector } from 'react-redux'
-import vehicleApi from "../api/vehicle/vehicleApi";
-import LoadingModal from "./LoadingModal";
-import Camera from './Camera'
+import vehicleApi from "../../api/vehicle/vehicleApi";
+import LoadingModal from "../LoadingModal";
+import Camera from '../Camera'
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 
 export default function AddCar({ navigation }) {
@@ -47,7 +47,7 @@ export default function AddCar({ navigation }) {
         <LoadingModal isLoading={isLoading} />
       ) : (
           <ScrollView style={styles.container}>
-              <StatusBar style="auto" />
+            <StatusBar style="auto" />
             <TextInput id='vehicleName' placeholder='Nome do Carro' />
             <Button
               title="Submit"
