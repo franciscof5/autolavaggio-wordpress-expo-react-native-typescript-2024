@@ -17,7 +17,19 @@ const vehicleApi = createApi({
     getVehiclesByUserId: builder.query<Vehicle, number>({
       query: (id) => `/vehicle?author=${id}`,
       providesTags: ["vehicle"],
+      // async onQueryStarted( console.log("d") ),
     }),
+
+    // getVehiclesByUserId: builder.query({
+    //   query(id) {
+    //     console.log("getVehiclesByUserId: ", id)
+    //     return {
+    //       url: `/vehicle?author=${id}`,
+    //     }
+    //   },
+    //   providesTags: ["vehicle"],
+    // }),
+
     // getVehicleById: builder.query<Vehicle, number>({
     //   query: (id) => `/users/${id}`,
     // }),
@@ -28,12 +40,14 @@ const vehicleApi = createApi({
           url: "/vehicle",//?Accept=application%2Fjson&Content-Type=application%2Fjson&title=4%20From%20Inside%20Insonmia&status=publish",
           method: 'POST',
           params: vehicle,
+          // data: {acf: {"vehicle_type":"ddd"}},
+          // acf: {"vehicle_type":"eee"},
           // {
           //   title: 'Direto da API2',
           //   status: 'publish'
           // },
           headers: {
-            Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3d3dy5sYXZhZ2dpb2FwcC5pdCIsImlhdCI6MTcyMjE4NTM4MiwibmJmIjoxNzIyMTg1MzgyLCJleHAiOjE3MjI3OTAxODIsImRhdGEiOnsidXNlciI6eyJpZCI6IjE4OSJ9fX0.RY52qyVoN2Ne_6EAudy-3Db0F7nR4qdqQZQhkP2xB5A'
+            Authorization: 'Bearer ' + vehicle.token
           }
         }
       },

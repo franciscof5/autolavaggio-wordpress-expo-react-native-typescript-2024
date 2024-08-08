@@ -10,22 +10,14 @@ import LoadingModal from "../LoadingModal";
 import { currentUserSlice } from '../../api/currentUserApi/currentUserSlice';
 
 const ListVehicles = () => {
-  const { data, error, isError, isLoading } = vehicleApi.useGetVehiclesByUserIdQuery(2);
-  // console.log("data", data);
-  
-  // const [loginUser, {data2}] = useLoginUserMutation();
-  // useSelector((state) => console.log(Object.values(state.currentUserApi.mutations)[0].data ) )
-  
-  let userObject = {
-    "token": "token", 
-    "user_display_name": "Username", 
-    "user_email": "email@email.com", 
-    "user_nicename": "nicename"
-  }
-  userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
-  
-  // const [getVehiclesByUserId,{ data, error, isError, isLoading }] = vehicleApi.useGetVehiclesByUserIdQuery();
-  // const [loginUser, { data, error, isError, isLoading }] = currentUserApi.useLoginUserMutation();
+  const userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
+  const userObjectFull = useSelector( (state) => Object.values(state.currentUserApi.mutations)[1].data ) //[0].data
+  //console.log("userObjectF", userObjectFull.id)
+
+  const { data, error, isError, isLoading } = vehicleApi.useGetVehiclesByUserIdQuery(userObjectFull.id);
+  useEffect(()=>{
+    // data ? console.log("ListVehicles vehicleApi data[0]", data[0]) : null;
+  })
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -42,7 +34,12 @@ const ListVehicles = () => {
                 <Text> A { item.token }</Text>
                 <View style={styles.textContainer}>
                   <Text style={styles.listItemTitle}>{item.title.rendered}</Text>
-                  <Text>Username: {item.slug}</Text>
+                  <Text>
+                    Username: { item.slug } 
+                    Type: {item.vehicle_type} 
+                    Veh: { JSON.stringify(item.content) }
+                    {/* ACF vehicle_type { JSON.stringify(item.acf.vehicle_type) } */}
+                  </Text>
                 </View>
               </View>
             );

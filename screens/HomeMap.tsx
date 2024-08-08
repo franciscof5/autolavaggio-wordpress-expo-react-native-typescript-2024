@@ -59,6 +59,7 @@ export default function HomeMapTabs({ navigation }) {
     navigation.setOptions({
       headerLeft: () => null,
     });
+    userLocation();
   }, [navigation]);
   const isFocused = useIsFocused();
   // const count = useSelector((state) => state.counter.value)
@@ -74,7 +75,6 @@ export default function HomeMapTabs({ navigation }) {
         // style={[{ marginTop: 40 }]}
         onPress={() => navigation.navigate("AddVehicle")}
       >
-        {" "}
         Adicionar
       </Button>
     </View>
@@ -88,21 +88,36 @@ export default function HomeMapTabs({ navigation }) {
     </View>
   );
 
+  const HomeAppMap = () => (
+    <PaperProvider>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <MapView style={styles.map} region={mapRegion}>
+          <Marker title="Io" coordinate={mapRegion} />
+        </MapView>
+      </View>
+    </PaperProvider>
+  );
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {
-      key: "maps",
-      title: "Maps",
-      focusedIcon: "map-marker",
-      unfocusedIcon: "map-marker-outline",
-    },
     {
       key: "cars",
       title: "Cars",
       focusedIcon: "car",
       unfocusedIcon: "car-outline",
     },
-    { key: "recents", title: "Recents", focusedIcon: "history" },
+    {
+      key: "maps",
+      title: "Maps",
+      focusedIcon: "map-marker",
+      unfocusedIcon: "map-marker-outline",
+    },
+    { 
+      key: "recents", 
+      title: "Recents", 
+      focusedIcon: "history" 
+    },
     {
       key: "notifications",
       title: "Notifications",
@@ -118,6 +133,31 @@ export default function HomeMapTabs({ navigation }) {
     notifications: Counter,
   });
 
+  const [mapRegion, setMapRegion] = useState({
+    latitude: 41.8905,
+    longitude: 12.4942,
+    latitudeDelta: 30,
+    longitudeDelta: 12,
+  });
+
+  const userLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("HomeMap userLocation status", status);
+    if (status !== "granted") {
+      console.log("need location");
+    }
+    let location = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+    console.log("HomeMap userLocation location", location);
+    setMapRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.002,
+    });
+  };
+
   return (
     <BottomNavigation
       navigationState={{ index, routes }}
@@ -128,46 +168,6 @@ export default function HomeMapTabs({ navigation }) {
 }
 
 //export default MyComponent;
-
-const HomeAppMap = () => {
-  const [mapRegion, setMapRegion] = useState({
-    latitude: 41.8905,
-    longitude: 12.4942,
-    latitudeDelta: 30,
-    longitudeDelta: 12,
-  });
-
-  const userLocation = async () => {
-    let { status } = await Location.requestBackgroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("need location");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({
-      enableHighAccuracy: true,
-    });
-    setMapRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.018,
-      longitudeDelta: 0.002,
-    });
-  };
-
-  useEffect(() => {
-    userLocation();
-  }, []);
-  return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <MapView style={styles.map} region={mapRegion}>
-          <Marker title="Io" coordinate={mapRegion} />
-        </MapView>
-      </View>
-    </PaperProvider>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {

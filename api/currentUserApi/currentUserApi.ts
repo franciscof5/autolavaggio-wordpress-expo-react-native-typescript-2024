@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const currentUserApi = createApi({
   reducerPath: "currentUserApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://www.lavaggioapp.it/wp-json/jwt-auth/v1" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://www.lavaggioapp.it/wp-json/" }),
   endpoints: (builder) => ({
     login: builder.query({
       query: (name) => ({
@@ -16,10 +16,18 @@ export const currentUserApi = createApi({
       // },
     }),
     loginUser: builder.mutation({
-      query: (user) => ({
-        // url: '/token?username='+user.username+'&password='+user.password,
-        url: '/token?username=foca&password=931777',
-        body: user,
+      query: (data) => ({
+        url: 'jwt-auth/v1/token?username=foca&password=931777',
+        body: data,
+        method: "POST",
+      }),
+    }),
+    getFullUser: builder.mutation({
+      query: (data) => ({
+        url: 'wp/v2/users/me',
+        headers: {
+          Authorization: 'Bearer '+ data.token,
+        },
         method: "POST",
       }),
     }),
@@ -29,7 +37,7 @@ export const currentUserApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 // export const { useLoginQuery } = currentUserApi
-export const { useLoginQuery, useLoginUserMutation } = currentUserApi;
+export const { useLoginQuery, useLoginUserMutation, useGetFullUserMutation } = currentUserApi;
 /*
 console.log("onSubmit")
     let datasend_login = {

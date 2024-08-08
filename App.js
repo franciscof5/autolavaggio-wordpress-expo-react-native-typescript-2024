@@ -18,6 +18,7 @@ import { Provider, useSelector } from 'react-redux'
 const Stack = createStackNavigator();
 
 import Login from "./screens/Login"
+import Register from "./screens/Register"
 import HomeMap from "./screens/HomeMap";
 import AddVehicle from "./screens/Vehicles/AddVehicle"
 import AddCarDetails from "./screens/Vehicles/AddCarDetails"
@@ -36,6 +37,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="HomeMap" component={HomeMap} />
               <Stack.Screen name="AddVehicle" component={AddVehicle} />
               <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
