@@ -17,6 +17,7 @@ import {
   ProgressBar,
   MD3Colors,
   PaperProvider,
+  FAB,
 } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
@@ -66,17 +67,23 @@ export default function HomeMapTabs({ navigation }) {
   // const dispatch = useDispatch()
 
   const CarsRoute = () => (
-    <View>
-      <Text>Your Cars!!!!!</Text>
+    <View style={styles.container}>
       <ListVehicles />
-      <Button
+      <FAB
+        icon="plus"
+        size="medium"
+        variant="primary"
+        style={styles.fab}
+        onPress={() => navigation.navigate("AddVehicle")}
+        />
+      {/* <Button
         mode="contained"
         icon="plus"
+        onPress={() => console.log('Pressed')}
         // style={[{ marginTop: 40 }]}
-        onPress={() => navigation.navigate("AddVehicle")}
       >
         Adicionar
-      </Button>
+      </Button> */}
     </View>
   );
 
@@ -173,12 +180,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#DDD",
+    height: "100%",
     // alignItems: 'center',
     // justifyContent: 'center',
   },
   map: {
     width: "100%",
     height: "100%",
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 

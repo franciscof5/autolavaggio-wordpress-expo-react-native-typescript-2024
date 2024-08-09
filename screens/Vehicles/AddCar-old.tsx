@@ -50,7 +50,6 @@ export default function AddCar({ navigation }) {
             <StatusBar style="auto" />
             <TextInput id='vehicleName' placeholder='Nome do Carro' />
             <Button
-              title="Submit"
               mode="outlined"
               style={styles.button}
               onPress={handleSave}
@@ -70,7 +69,6 @@ export default function AddCar({ navigation }) {
           <Button 
             onPress={()=>{navigation.navigate("Profile")}} 
             style={styles.button}
-            title="Profile"
            />
            </ScrollView>
       )}

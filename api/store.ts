@@ -6,7 +6,7 @@ import { currentUserApi } from './currentUserApi/currentUserApi';
 // import { currentUserSlice } from './currentUserApi/currentUserSlice'
 //
 import mediaApi from './media/mediaApi'
-
+//todo: fazer persistência / persistent reducer
 export const store = configureStore({
   reducer: {
     //

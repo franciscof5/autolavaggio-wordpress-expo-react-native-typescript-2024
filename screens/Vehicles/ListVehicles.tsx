@@ -24,7 +24,7 @@ const ListVehicles = () => {
         <LoadingModal isLoading={isLoading} />
       ) : (
         <View>
-        <Text>Macchinas de {userObject.user_display_name}</Text>
+        {/* <Text>Macchinas de {userObject.user_display_name}</Text> */}
         <FlatList
           data={data}
           style={styles.list}
@@ -53,7 +53,7 @@ const ListVehicles = () => {
 
 const styles = StyleSheet.create({
     container: {
-      height: "60%",
+      height: "100%",
     },
     list: {
       padding: 10,
