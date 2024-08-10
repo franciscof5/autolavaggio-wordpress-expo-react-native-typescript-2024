@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Alert, Image } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { LavaggioStore } from "../storage";
 import { Button, MD3Colors, ProgressBar, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 // import Toast from 'react-native-root-toast';
@@ -31,7 +30,7 @@ export default function LoginScreen({ navigation }) {
     control,
     register,
     formState: { errors },
-  } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
+  } = useForm();
   const isFocused = useIsFocused();
   
   const onSubmit = () => {

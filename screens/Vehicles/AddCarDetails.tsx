@@ -25,7 +25,6 @@ import {
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
-import { LavaggioStore } from "../../storage";
 import {
   SubmitHandler,
   useForm,
@@ -83,14 +82,14 @@ export default function AddCarDetails({ navigation }) {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [rdata, setRdata] = useState([]);
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
+  // const {
+  //   register,
+  //   control,
+  //   handleSubmit,
+  //   reset,
+  //   watch,
+  //   formState: { errors },
+  // } = useForm({ defaultValues: LavaggioStore.useState((s) => s) });
   //   const { fields, append, prepend, remove, swap, move, insert, replace } =
   //   useFieldArray({
   //     control,
@@ -100,23 +99,23 @@ export default function AddCarDetails({ navigation }) {
   //     // },
   //   });
 
-  useEffect(() => {
-    isFocused &&
-      LavaggioStore.update((s) => {
-        s.progress = 10;
-      });
-  }, [isFocused]);
+  // useEffect(() => {
+  //   isFocused &&
+  //     LavaggioStore.update((s) => {
+  //       s.progress = 10;
+  //     });
+  // }, [isFocused]);
 
   const onSubmit = (data) => {
     //axios.get("http://app.trcmobile.com.br/ws/checklist/new_checklist.php")
     //.then((r)=> {
     //console.log("r.data.data.grupo_checklist", r.data.data.grupo_checklist)
-    LavaggioStore.update((s) => {
-      s.progress = 20;
-      // s.step = {
-      //     ["notas_calculadas"]:[]
-      // }
-    });
+    // LavaggioStore.update((s) => {
+    //   s.progress = 20;
+    //   // s.step = {
+    //   //     ["notas_calculadas"]:[]
+    //   // }
+    // });
     navigation.navigate("ChecklistGroup");
     //})
   };

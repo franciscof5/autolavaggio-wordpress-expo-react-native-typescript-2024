@@ -21,7 +21,6 @@ import {
 } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
-import { LavaggioStore } from "../storage";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 //import GetLocation from 'react-native-get-location';
@@ -44,9 +43,6 @@ Notifications.setNotificationHandler({
 // const soundStart = require("../sounds/crank-2.mp3")
 // const soundTrompeth = require("../sounds/77711__sorohanro__solo-trumpet-06in-f-90bpm.mp3")
 // const soundRing = require("../sounds/telephone-ring-1.mp3")
-
-let pomodoroTime = LavaggioStore.getRawState().session_object.pomodoroTime;
-let restTime = LavaggioStore.getRawState().session_object.restTime;
 
 const MusicRoute = () => <Text>Music</Text>;
 

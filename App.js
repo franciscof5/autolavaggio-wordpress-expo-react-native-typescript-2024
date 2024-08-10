@@ -14,7 +14,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
-
 import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
 //import { getVehicles } from "./store/vehicle/vehicleSlice";

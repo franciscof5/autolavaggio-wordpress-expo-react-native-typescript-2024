@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -15,25 +15,57 @@ import {
   MD3Colors,
   FAB,
   Snackbar,
+  Searchbar,
 } from "react-native-paper";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import vehicleApi from "../../api/vehicle/vehicleApi";
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { Title } from "react-native-paper";
 
 const logo = require("../../assets/images/gio-logo.png");
+
+const currentPlace = {
+  description: "Current Location",
+  geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
+};
 
 export default function Profile({ navigation }) {
   const [carTitle, setCarTitle] = useState("Ti");
   const [carType, setCarType] = useState(null);
-  const [carAddress, setCarAddress] = useState(null);
+  const [carAddress, setCarAddress] = useState("Addrress");
   const [image, setImage] = useState(null);
   const [imageLowRes, setImageLowRes] = useState(null);
   const [wpMediaId, setWpMediaId] = useState(null);
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   watch,
+  //   formState: { errors },
+  // } = useForm<FormFields>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    defaultValues: {
+      carTitleF: "",
+      carAddressF: carAddress,
+      mapRegionF: null,
+    },
+  });
+  useEffect(() => {
+    if (carAddress) {
+      // setValue([{ carAddressF: carAddress }]);
+    }
+  }, [carAddress]);
+  //
   const [visibleSnack, setVisibleSnack] = React.useState(false);
   const onToggleSnackBar = () => setVisibleSnack(!visibleSnack);
   const onDismissSnackBar = () => setVisibleSnack(false);
@@ -207,7 +239,7 @@ export default function Profile({ navigation }) {
 
     React.useLayoutEffect(() => {
       navigation.setOptions({
-        headerLeft: () => null,
+        // headerLeft: () => null,
       });
       userLocation();
     }, [navigation]);
@@ -220,22 +252,25 @@ export default function Profile({ navigation }) {
       }
       let location = await Location.getCurrentPositionAsync({
         enableHighAccuracy: true,
-      })
-      // .then(async(location)=>{
-      const getAdd = async(location) => {
+      });
+      const getAdd = async (location) => {
         try {
-          const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${location.coords.latitude}&lon=${location.coords.longitude}&format=json`);
-          const { house_number, road, postcode, country } = response.data.address;
+          const response = await axios.get(
+            `https://nominatim.openstreetmap.org/reverse?lat=${location.coords.latitude}&lon=${location.coords.longitude}&format=json`
+          );
+          const { house_number, road, postcode, country } =
+            response.data.address;
           const addressComponents = [house_number, road, postcode, country];
-          const currentAddress = addressComponents.filter(component => component).join(', ');
+          const currentAddress = addressComponents
+            .filter((component) => component)
+            .join(", ");
           console.log("currentAddress", currentAddress);
           setCarAddress(currentAddress);
         } catch (error) {
-          console.error('Error performing reverse geocoding:', error);
+          console.error("Error performing reverse geocoding:", error);
         }
-      }
+      };
       getAdd(location);
-      // });
       console.log("userLocation location", location);
       setMapRegion({
         latitude: location.coords.latitude,
@@ -254,48 +289,124 @@ export default function Profile({ navigation }) {
     </View>
   );
 
+  const onSubmit = (data) => console.log(data);
   const ScreenCarName = () => (
     <View style={styles.content}>
       <Text style={styles.textTitle}>Nome dell'auto</Text>
-      <TextInput
+      {/* <TextInput
         id="vehicleName"
         placeholder="Esempio: l'auto di mia moglie"
         mode="flat"
         style={styles.textInput}
-        onChangeText={(text) => {
-          setCarTitle(text);
+        // onChangeText={setCarTitle}
+        // value={carTitle}
+        {...register("carNameF")}
+      /> */}
+
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
-        value={carTitle}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            style={styles.textInput}
+            mode="flat"
+            placeholder="Es: l'auto di mia moglie"
+          />
+        )}
+        name="carTitleF"
       />
+      {errors.carTitleF && <Text>This is required.</Text>}
+
       <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
         {visibleSnack ? "Campo obbligatorio" : ""}
       </Text>
-      <NavButtonsArrows
-        nextStep="2"
-        prevTitle="Cancel"
-        nextTitle="Car Type"
-      />
+      <NavButtonsArrows nextStep="2" prevTitle="Cancel" nextTitle="Car Type" />
     </View>
   );
 
+  const searchCoordsByAdress = async () => {
+    console.log("searchCoordsByAdress");
+    try {
+      const response = await axios.get(
+        `https://geocode.maps.co/search?q=${carAddress}&api_key=66b65d0b8e191107980507ybqfde93e`
+      );
+      console.log("response", response);
+      // setCarAddress(currentAddress);
+    } catch (error) {
+      console.error("Error performing geocoding:", error);
+    }
+  };
+  // navigator.geolocation = require('react-native-geolocation-service');
   const ScreenLocation = () => (
     <View style={styles.content2}>
       <Text style={styles.textTitle}>Indirizzo di lavaggio</Text>
 
+      <GooglePlacesAutocomplete
+        placeholder="Search"
+        onPress={(data, details = null) => {
+          // 'details' is provided when fetchDetails = true
+          // console.log(data, details);
+          console.log(details.geometry.location.lat);
+          setMapRegion({
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            latitudeDelta: 0.018,
+            longitudeDelta: 0.002,
+          });
+        }}
+        fetchDetails={true}
+        onFail={(error) => console.error(error)}
+        onNotFound={() => console.log('no results')}
+        query={{
+          key: "AIzaSyCZKNsuISPimxk3tJF6To9Rd1aqEBW7SWE",
+          language: "en",
+        }}
+        predefinedPlaces={[currentPlace]}
+        // currentLocation={true}
+        // currentLocationLabel="Current location"
+        textInputProps={{
+          InputComp: TextInput,
+          // icon:{icon:"map-marker"},
+          icon: "map-marker",
+          // style:{styles.GooglePlacesAutocomplete},
+          leftIcon: { type: 'font-awesome', name: 'chevron-left' },
+          errorStyle: { color: 'red' },
+        }}
+      />
+
       <MapView style={styles.map} region={mapRegion}>
         <Marker title="Io" coordinate={mapRegion} />
       </MapView>
-      <TextInput
-        id="vehicleName"
-        placeholder="cercando l'indirizzo della tua posizione..."
-        mode="flat"
-        style={styles.textInput}
-        onChangeText={(text) => {
-          setCarAddress(text);
-        }}
-        value={carAddress}
-      />
-      <Text style={{position:"relative", marginTop:-45}}>  <Icon source="map-marker" size={30}/></Text>
+      {/* <View>
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Searchbar
+              placeholder="Search"
+              icon="map-marker"
+              mode="bar"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              style={styles.textInput}
+            />
+          )}
+          name="carAddressF"
+        />
+        {errors.carAddressF && <Text>This is required.</Text>}
+      </View>
+      <Button onPress={handleSubmit(onSubmit)} mode="contained">
+        SUB
+      </Button> */}
+
       <NavButtonsArrows
         nextStep="3"
         prevTitle="Car Name"
@@ -321,7 +432,7 @@ export default function Profile({ navigation }) {
           />
         </TouchableOpacity>
       )}
-      <View style={styles.buttonGroup}>
+      <View style={styles.NavButtonsArrows}>
         <Button
           mode="contained-tonal"
           onPress={pickImage}
@@ -359,12 +470,13 @@ export default function Profile({ navigation }) {
   );
 
   const NavButtonsArrows = (props: nextStep, nextTitle, prevTitle) => (
-    <View style={styles.buttonGroup}>
+    <View style={styles.NavButtonsArrows}>
       <TouchableOpacity
         style={styles.buttonNav}
         onPress={() => {
-          setStep(props.nextStep-2)
-        }}      >
+          setStep(props.nextStep - 2);
+        }}
+      >
         <Icon source="arrow-left" size={50} />
         <Text style={{ width: "100%", textAlign: "center" }}>
           {props.prevTitle}
@@ -374,8 +486,9 @@ export default function Profile({ navigation }) {
       <TouchableOpacity
         style={styles.buttonNav}
         onPress={() => {
-          console.log("carTitle", carTitle);
-          carTitle ? setStep(props.nextStep) : onToggleSnackBar();
+          // carTitle ?
+          setStep(props.nextStep);
+          //  : onToggleSnackBar();
         }}
       >
         <Icon source="arrow-right" size={50} />
@@ -392,6 +505,7 @@ export default function Profile({ navigation }) {
       {step == 0 && <ScreenCancel />}
       {step == 1 && <ScreenCarName />}
       {step == 2 && <ScreenLocation />}
+
       <Snackbar
         visible={visibleSnack}
         onDismiss={onDismissSnackBar}
@@ -406,11 +520,11 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: "#AAD",
     // verticalAlign: "middle",
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 100,
+    // paddingBottom: 100,
     // width: "100%",
     // backgroundColor: "#DDD",
   },
@@ -424,9 +538,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 30,
+    backgroundColor: "#FFF",
+    padding: 5,
   },
-  buttonGroup: {
-    // position:"absolute",
+  NavButtonsArrows: {
     zIndex: 20,
     display: "flex",
     flexDirection: "row",
@@ -434,17 +549,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonNav: {
-    width: "50%",
-    paddingBottom: 20,
-    maxWidth: 150,
+    width: "40%",
+    margin: "5%",
+    // paddingBottom: 20,
+    maxWidth: 120,
     // display: "flex",
     justifyContent: "center",
     alignItems: "center",
     // textAlign: "center",
-    borderRadius: 100,
-    height: 150,
-    // backgroundColor: "#FFF",
-    
+    borderRadius: 120,
+    height: 120,
+    backgroundColor: "#FFF",
   },
   scroll: {
     backgroundColor: "white",
@@ -465,15 +580,28 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 20,
     paddingLeft: 24,
+    borderRadius: 30,
+    borderBottomWidth: 0,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
   },
   map: {
     width: "100%",
-    height: 300,
-    backgroundColor: "#000",
+    height: "100%",
+    // backgroundColor: "#000",
+    zIndex:-10,
+    flex: 1,
+    // marginTop: 100,
+    position:"absolute",
   },
-  
   buttonItem: {
     width: "50%",
     // flexDirection:"row"
   },
+  GooglePlacesAutocomplete: {
+    zIndex:10,
+    position:"absolute",
+    backgroundColor: "#EEE",
+    fontSize: 20,
+  }
 });
