@@ -6,13 +6,13 @@ import { useIsFocused } from "@react-navigation/native";
 // import Toast from 'react-native-root-toast';
 import LoadingModal from "./LoadingModal";
 import { useLoginUserMutation, useGetFullUserMutation } from "../api/currentUserApi/currentUserApi";
-import axios from "axios";
 const logo = require("../assets/images/gio-logo.png");
 const lavagem1 = require("../assets/images/foto-lavagem-1.jpg");
 
 export default function LoginScreen({ navigation }) {
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState(global.USER)
+  const [password, setPassword] = useState(global.PASS)
+  
   const [loginUser, { data, error, isError, isLoading }] =
     useLoginUserMutation();
 

@@ -17,7 +17,7 @@ export const currentUserApi = createApi({
     }),
     loginUser: builder.mutation({
       query: (data) => ({
-        url: 'jwt-auth/v1/token?username=foca&password=931777',
+        url: 'jwt-auth/v1/token?username='+data.username+'&password='+data.password,
         body: data,
         method: "POST",
       }),

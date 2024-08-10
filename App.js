@@ -17,6 +17,10 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
+// import {PLACES_API} from '@env'
+// import Config from "react-native-config";
+// import { PLACES_API } from 'react-native-dotenv'
+// Config.PLACES_API; // 'https://myapi.com'
 
 const Stack = createStackNavigator();
 
@@ -98,6 +102,11 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  // console.log("process.env.SUSERR",process.env.SUSERR);
+
+  global.PLACES_API = process.env.PLACES_API;
+  global.USER = process.env.SUSERR;
+  global.PASS = process.env.PASS;
 
   return (
     <Provider store={store}>

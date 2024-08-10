@@ -329,84 +329,67 @@ export default function Profile({ navigation }) {
     </View>
   );
 
-  const searchCoordsByAdress = async () => {
-    console.log("searchCoordsByAdress");
-    try {
-      const response = await axios.get(
-        `https://geocode.maps.co/search?q=${carAddress}&api_key=66b65d0b8e191107980507ybqfde93e`
-      );
-      console.log("response", response);
-      // setCarAddress(currentAddress);
-    } catch (error) {
-      console.error("Error performing geocoding:", error);
-    }
-  };
+  // const searchCoordsByAdress = async () => {
+  //   console.log("searchCoordsByAdress");
+  //   try {
+  //     const response = await axios.get(
+  //       `https://geocode.maps.co/search?q=${carAddress}&api_key=66b65d0b8e191107980507ybqfde93e`
+  //     );
+  //     console.log("response", response);
+  //     // setCarAddress(currentAddress);
+  //   } catch (error) {
+  //     console.error("Error performing geocoding:", error);
+  //   }
+  // };
   // navigator.geolocation = require('react-native-geolocation-service');
   const ScreenLocation = () => (
     <View style={styles.content2}>
       <Text style={styles.textTitle}>Indirizzo di lavaggio</Text>
 
-      <GooglePlacesAutocomplete
-        placeholder="Search"
-        onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          // console.log(data, details);
-          console.log(details.geometry.location.lat);
-          setMapRegion({
-            latitude: details.geometry.location.lat,
-            longitude: details.geometry.location.lng,
-            latitudeDelta: 0.018,
-            longitudeDelta: 0.002,
-          });
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
-        fetchDetails={true}
-        onFail={(error) => console.error(error)}
-        onNotFound={() => console.log('no results')}
-        query={{
-          key: "AIzaSyCZKNsuISPimxk3tJF6To9Rd1aqEBW7SWE",
-          language: "en",
-        }}
-        predefinedPlaces={[currentPlace]}
-        // currentLocation={true}
-        // currentLocationLabel="Current location"
-        textInputProps={{
-          InputComp: TextInput,
-          // icon:{icon:"map-marker"},
-          icon: "map-marker",
-          // style:{styles.GooglePlacesAutocomplete},
-          leftIcon: { type: 'font-awesome', name: 'chevron-left' },
-          errorStyle: { color: 'red' },
-        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <GooglePlacesAutocomplete
+            placeholder={carAddress}
+            onPress={(data, details = null) => {
+              console.log(details.address_components);
+              setCarAddress(details.formatted_address);
+              setMapRegion({
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+                latitudeDelta: 0.018,
+                longitudeDelta: 0.002,
+              });
+            }}
+            // value={carAddress}
+            fetchDetails={true}
+            onFail={(error) => console.error(error)}
+            onNotFound={() => console.log("no results")}
+            query={{
+              key: global.PLACES_API,
+              language: "en",
+            }}
+            predefinedPlaces={[currentPlace]}
+            textInputProps={{
+              InputComp: TextInput,
+              // icon:{icon:"map-marker"},
+              icon: "map-marker",
+              // style:{styles.GooglePlacesAutocomplete},
+              leftIcon: { type: "font-awesome", name: "chevron-left" },
+              errorStyle: { color: "red" },
+            }}
+          />
+        )}
+        name="carAddressF"
       />
-
+      {errors.carAddressF && <Text>This is required.</Text>}
       <MapView style={styles.map} region={mapRegion}>
         <Marker title="Io" coordinate={mapRegion} />
       </MapView>
-      {/* <View>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Searchbar
-              placeholder="Search"
-              icon="map-marker"
-              mode="bar"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              style={styles.textInput}
-            />
-          )}
-          name="carAddressF"
-        />
-        {errors.carAddressF && <Text>This is required.</Text>}
-      </View>
-      <Button onPress={handleSubmit(onSubmit)} mode="contained">
-        SUB
-      </Button> */}
-
+      
       <NavButtonsArrows
         nextStep="3"
         prevTitle="Car Name"
@@ -520,7 +503,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    backgroundColor: "#AAD",
+    backgroundColor: "#FFF",
     // verticalAlign: "middle",
     alignItems: "center",
     justifyContent: "center",
@@ -589,19 +572,19 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     // backgroundColor: "#000",
-    zIndex:-10,
+    zIndex: -10,
     flex: 1,
     // marginTop: 100,
-    position:"absolute",
+    position: "absolute",
   },
   buttonItem: {
     width: "50%",
     // flexDirection:"row"
   },
   GooglePlacesAutocomplete: {
-    zIndex:10,
-    position:"absolute",
+    zIndex: 10,
+    position: "absolute",
     backgroundColor: "#EEE",
     fontSize: 20,
-  }
+  },
 });

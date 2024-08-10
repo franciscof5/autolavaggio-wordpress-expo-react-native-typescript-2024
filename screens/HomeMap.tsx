@@ -21,7 +21,7 @@ import {
 } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
-import MapView, { Marker } from "react-native-maps";
+// import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 //import GetLocation from 'react-native-get-location';
 import { useIsFocused } from "@react-navigation/native";
