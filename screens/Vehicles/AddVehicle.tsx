@@ -81,205 +81,199 @@ export default function Profile({ navigation }) {
     (state) => Object.values(state.currentUserApi.mutations)[0].data
   );
   //
-  {
-    const uploadImage = async (image) => {
-      const base64 = image.base64;
-      const formData = new FormData();
-      formData.append("token", userObject.token);
-      formData.append("image", base64);
 
-      var options = {
-        method: "POST",
-        url: "https://www.lavaggioapp.it/wp-json/myplugin/v1/uploadAvatar",
-        params: { "": ["", ""] },
-        headers: {
-          "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
-        },
-        data: formData,
-      };
+  const uploadImage = async (image) => {
+    const base64 = image.base64;
+    const formData = new FormData();
+    formData.append("token", userObject.token);
+    formData.append("image", base64);
 
-      axios
-        .post(
-          "https://www.lavaggioapp.it/wp-json/myplugin/v1/uploadAvatar",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
-        .then(function (response) {
-          console.log(response.data);
-          setWpMediaId(response.data.id);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+    var options = {
+      method: "POST",
+      url: "https://www.lavaggioapp.it/wp-json/myplugin/v1/uploadAvatar",
+      params: { "": ["", ""] },
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+      },
+      data: formData,
     };
 
-    const checkCar = async (imageUrl) => {
-      const form = new FormData();
-      form.append("image_url", imageUrl);
-      form.append("car_classifier", "true");
-      form.append("car_type_classifier", "true");
-      form.append("car_shoot_category", "true");
-      form.append("car_interior_category", "true");
-      form.append("angle_detection", "true");
-      form.append("crop_detection", "true");
-      form.append("distance_detection", "true");
-      form.append("exposure_detection", "true");
-      form.append("reflection_detection", "true");
-      form.append("tilt_detection", "true");
-      form.append("window_tint_detection", "true");
-      form.append("tyre_mud_detection", "true");
-      form.append("number_plate_detection", "true");
-      const url = "https://api.spyne.ai/auto/classify/v1/image";
-      const options = {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          authorization: "Bearer bf3154da-cf31-4d61-bdee-ad3e1a74a5d4",
-        },
-      };
-
-      options.body = form;
-
-      fetch(url, options)
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(json);
-          console.log(json.data.validation_result.car_classifier);
-          console.log(json.data.validation_result.car_type_classifier);
-          console.log(json.data.validation_result.number_plate_detection);
-          console.log(
-            json.data.validation_result.tyre_mud_detection.tyres.clean
-          );
-          console.log(
-            json.data.validation_result.tyre_mud_detection.tyres.dirty
-          );
-          setCarType(json.data.validation_result.car_type_classifier.value);
-        })
-        .catch((err) => console.error("error:" + err));
-    };
-
-    const pickImage = async () => {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        //   base64: true,
-      });
-
-      console.log(result);
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-        imageResize(result);
-      }
-    };
-
-    const takePicture = async () => {
-      let result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-      console.log(result);
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-        imageResize(result);
-      }
-    };
-
-    const imageResize = async (image) => {
-      console.log("imageResize, image.assets[0].uri", image.assets[0].uri);
-      const manipResult = await manipulateAsync(
-        image.assets[0].uri,
-        //[{ width: 20, {}}]
-        [{ resize: { width: 400, height: 300 } }],
-        //   [{ rotate: 90 }, { flip: FlipType.Vertical }],
-        { compress: 1, format: SaveFormat.PNG, base64: true }
-      );
-      // .then(()=>{
-      setImageLowRes(manipResult);
-      // console.log("manipResult", manipResult);
-      await uploadImage(manipResult);
-      await checkCar(manipResult);
-      // });
-    };
-
-    const [addVehicle, { data, error, isError, isLoading }] =
-      vehicleApi.useAddVehicleMutation();
-
-    const handleSave = async () => {
-      Keyboard.dismiss();
-      let r = null;
-
-      r = await addVehicle({
-        title: carTitle,
-        content: JSON.stringify({
-          vehicle_type: carType,
-          vehicle_location: "location",
-        }),
-        status: "publish",
-        token: userObject.token,
-        featured_media: wpMediaId ? wpMediaId : 100,
-      }).then((data) => {
-        console.log(data);
-        if (data.data.id) {
-          navigation.navigate("HomeMap");
+    axios
+      .post(
+        "https://www.lavaggioapp.it/wp-json/myplugin/v1/uploadAvatar",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
+      )
+      .then(function (response) {
+        console.log(response.data);
+        setWpMediaId(response.data.id);
+      })
+      .catch(function (error) {
+        console.error(error);
       });
+  };
 
-      console.log("r", r, mapRegion);
+  const checkCar = async (imageUrl) => {
+    const form = new FormData();
+    form.append("image_url", imageUrl);
+    form.append("car_classifier", "true");
+    form.append("car_type_classifier", "true");
+    form.append("car_shoot_category", "true");
+    form.append("car_interior_category", "true");
+    form.append("angle_detection", "true");
+    form.append("crop_detection", "true");
+    form.append("distance_detection", "true");
+    form.append("exposure_detection", "true");
+    form.append("reflection_detection", "true");
+    form.append("tilt_detection", "true");
+    form.append("window_tint_detection", "true");
+    form.append("tyre_mud_detection", "true");
+    form.append("number_plate_detection", "true");
+    const url = "https://api.spyne.ai/auto/classify/v1/image";
+    const options = {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        authorization: "Bearer bf3154da-cf31-4d61-bdee-ad3e1a74a5d4",
+      },
     };
 
-    React.useLayoutEffect(() => {
-      navigation.setOptions({
-        // headerLeft: () => null,
-      });
-      userLocation();
-    }, [navigation]);
+    options.body = form;
 
-    const userLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log("userLocation status", status);
-      if (status !== "granted") {
-        console.log("need location");
+    fetch(url, options)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        console.log(json.data.validation_result.car_classifier);
+        console.log(json.data.validation_result.car_type_classifier);
+        console.log(json.data.validation_result.number_plate_detection);
+        console.log(json.data.validation_result.tyre_mud_detection.tyres.clean);
+        console.log(json.data.validation_result.tyre_mud_detection.tyres.dirty);
+        setCarType(json.data.validation_result.car_type_classifier.value);
+      })
+      .catch((err) => console.error("error:" + err));
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      //   base64: true,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      imageResize(result);
+    }
+  };
+
+  const takePicture = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      imageResize(result);
+    }
+  };
+
+  const imageResize = async (image) => {
+    console.log("imageResize, image.assets[0].uri", image.assets[0].uri);
+    const manipResult = await manipulateAsync(
+      image.assets[0].uri,
+      //[{ width: 20, {}}]
+      [{ resize: { width: 400, height: 300 } }],
+      //   [{ rotate: 90 }, { flip: FlipType.Vertical }],
+      { compress: 1, format: SaveFormat.PNG, base64: true }
+    );
+    // .then(()=>{
+    setImageLowRes(manipResult);
+    // console.log("manipResult", manipResult);
+    await uploadImage(manipResult);
+    await checkCar(manipResult);
+    // });
+  };
+
+  const [addVehicle, { data, error, isError, isLoading }] =
+    vehicleApi.useAddVehicleMutation();
+
+  const handleSave = async () => {
+    Keyboard.dismiss();
+    let r = null;
+
+    r = await addVehicle({
+      title: carTitle,
+      content: JSON.stringify({
+        vehicle_type: carType,
+        vehicle_location: "location",
+      }),
+      status: "publish",
+      token: userObject.token,
+      featured_media: wpMediaId ? wpMediaId : 100,
+    }).then((data) => {
+      console.log(data);
+      if (data.data.id) {
+        navigation.navigate("HomeMap");
       }
-      let location = await Location.getCurrentPositionAsync({
-        enableHighAccuracy: true,
-      });
-      const getAdd = async (location) => {
-        try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/reverse?lat=${location.coords.latitude}&lon=${location.coords.longitude}&format=json`
-          );
-          const { house_number, road, postcode, country } =
-            response.data.address;
-          const addressComponents = [house_number, road, postcode, country];
-          const currentAddress = addressComponents
-            .filter((component) => component)
-            .join(", ");
-          console.log("currentAddress", currentAddress);
-          setCarAddress(currentAddress);
-        } catch (error) {
-          console.error("Error performing reverse geocoding:", error);
-        }
-      };
-      getAdd(location);
-      console.log("userLocation location", location);
-      setMapRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.018,
-        longitudeDelta: 0.002,
-      });
+    });
+
+    console.log("r", r, mapRegion);
+  };
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      // headerLeft: () => null,
+    });
+    userLocation();
+  }, [navigation]);
+
+  const userLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("userLocation status", status);
+    if (status !== "granted") {
+      console.log("need location");
+    }
+    let location = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+    const getAdd = async (location) => {
+      try {
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/reverse?lat=${location.coords.latitude}&lon=${location.coords.longitude}&format=json`
+        );
+        const { house_number, road, postcode, country } = response.data.address;
+        const addressComponents = [house_number, road, postcode, country];
+        const currentAddress = addressComponents
+          .filter((component) => component)
+          .join(", ");
+        console.log("currentAddress", currentAddress);
+        setCarAddress(currentAddress);
+      } catch (error) {
+        console.error("Error performing reverse geocoding:", error);
+      }
     };
-  }
+    getAdd(location);
+    console.log("userLocation location", location);
+    setMapRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.002,
+    });
+  };
 
   const ScreenCancel = () => (
     <View>
@@ -389,7 +383,7 @@ export default function Profile({ navigation }) {
       <MapView style={styles.map} region={mapRegion}>
         <Marker title="Io" coordinate={mapRegion} />
       </MapView>
-      
+
       <NavButtonsArrows
         nextStep="3"
         prevTitle="Car Name"
@@ -433,6 +427,11 @@ export default function Profile({ navigation }) {
           Take Picture
         </Button>
       </View>
+      <NavButtonsArrows
+        nextStep="4"
+        prevTitle="Car Location"
+        nextTitle="Save"
+      />
     </View>
   );
 
@@ -488,6 +487,7 @@ export default function Profile({ navigation }) {
       {step == 0 && <ScreenCancel />}
       {step == 1 && <ScreenCarName />}
       {step == 2 && <ScreenLocation />}
+      {step == 3 && <ScreenPicture />}
 
       <Snackbar
         visible={visibleSnack}

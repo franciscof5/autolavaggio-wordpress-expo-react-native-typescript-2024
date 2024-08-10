@@ -102,7 +102,6 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  // console.log("process.env.SUSERR",process.env.SUSERR);
 
   global.PLACES_API = process.env.PLACES_API;
   global.USER = process.env.SUSERR;
