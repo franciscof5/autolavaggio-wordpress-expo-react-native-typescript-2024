@@ -30,18 +30,17 @@ import { Title } from "react-native-paper";
 
 const logo = require("../../assets/images/gio-logo.png");
 
-const currentPlace = {
-  description: "Current Location",
-  geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
-};
-
 export default function Profile({ navigation }) {
-  const [carTitle, setCarTitle] = useState("Ti");
+  const [carTitle, setCarTitle] = useState(null);
   const [carType, setCarType] = useState(null);
-  const [carAddress, setCarAddress] = useState("Addrress");
+  const [carAddress, setCarAddress] = useState(null);
   const [image, setImage] = useState(null);
   const [imageLowRes, setImageLowRes] = useState(null);
   const [wpMediaId, setWpMediaId] = useState(null);
+  const currentPlace = {
+    description: "Current Location",
+    geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
+  };
   // const {
   //   register,
   //   handleSubmit,
@@ -50,12 +49,14 @@ export default function Profile({ navigation }) {
   // } = useForm<FormFields>();
   const {
     control,
+    register,
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm({
     defaultValues: {
-      carTitleF: "",
+      carTitleF: carTitle,
       carAddressF: carAddress,
       mapRegionF: null,
     },
@@ -109,11 +110,11 @@ export default function Profile({ navigation }) {
         }
       )
       .then(function (response) {
-        console.log(response.data);
+        console.log("uploadMedia", response.data);
         setWpMediaId(response.data.id);
       })
       .catch(function (error) {
-        console.error(error);
+        console.error("uploadMedia", error);
       });
   };
 
@@ -203,7 +204,7 @@ export default function Profile({ navigation }) {
     setImageLowRes(manipResult);
     // console.log("manipResult", manipResult);
     await uploadImage(manipResult);
-    await checkCar(manipResult);
+    // await checkCar(manipResult);
     // });
   };
 
@@ -212,17 +213,24 @@ export default function Profile({ navigation }) {
 
   const handleSave = async () => {
     Keyboard.dismiss();
+    
+    // await uploadImage(manipResult);
+    
     let r = null;
 
     r = await addVehicle({
-      title: carTitle,
+      title: getValues("carTitleF"),
       content: JSON.stringify({
-        vehicle_type: carType,
-        vehicle_location: "location",
+        // vehicle_type: carType,
+        vehicle_address: carAddress,
+        vehicle_position: {
+          latitude: mapRegion.latitude,
+          longitude: mapRegion.longitude,
+        }
       }),
       status: "publish",
       token: userObject.token,
-      featured_media: wpMediaId ? wpMediaId : 100,
+      featured_media: wpMediaId ? wpMediaId : null,
     }).then((data) => {
       console.log(data);
       if (data.data.id) {
@@ -261,6 +269,7 @@ export default function Profile({ navigation }) {
           .join(", ");
         console.log("currentAddress", currentAddress);
         setCarAddress(currentAddress);
+        setValue("carAddressF", currentAddress);
       } catch (error) {
         console.error("Error performing reverse geocoding:", error);
       }
@@ -283,20 +292,9 @@ export default function Profile({ navigation }) {
     </View>
   );
 
-  const onSubmit = (data) => console.log(data);
   const ScreenCarName = () => (
     <View style={styles.content}>
       <Text style={styles.textTitle}>Nome dell'auto</Text>
-      {/* <TextInput
-        id="vehicleName"
-        placeholder="Esempio: l'auto di mia moglie"
-        mode="flat"
-        style={styles.textInput}
-        // onChangeText={setCarTitle}
-        // value={carTitle}
-        {...register("carNameF")}
-      /> */}
-
       <Controller
         control={control}
         rules={{
@@ -304,8 +302,12 @@ export default function Profile({ navigation }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            {...register("carTitleF")}
             onBlur={onBlur}
-            onChangeText={onChange}
+            onChangeText={(e) => {
+              console.log("inside percentage controller >>>>>>>", e);
+              setValue("carTitleF", e);
+            }}
             value={value}
             style={styles.textInput}
             mode="flat"
@@ -319,23 +321,15 @@ export default function Profile({ navigation }) {
       <Text style={{ margin: 8, marginLeft: 16, color: "red" }}>
         {visibleSnack ? "Campo obbligatorio" : ""}
       </Text>
-      <NavButtonsArrows nextStep="2" prevTitle="Cancel" nextTitle="Car Type" />
+      <NavButtonsArrows
+        nextStep="2"
+        prevTitle="Cancel"
+        nextTitle="Car Type"
+        emptyCheck={getValues("carTitleF")}
+      />
     </View>
   );
 
-  // const searchCoordsByAdress = async () => {
-  //   console.log("searchCoordsByAdress");
-  //   try {
-  //     const response = await axios.get(
-  //       `https://geocode.maps.co/search?q=${carAddress}&api_key=66b65d0b8e191107980507ybqfde93e`
-  //     );
-  //     console.log("response", response);
-  //     // setCarAddress(currentAddress);
-  //   } catch (error) {
-  //     console.error("Error performing geocoding:", error);
-  //   }
-  // };
-  // navigator.geolocation = require('react-native-geolocation-service');
   const ScreenLocation = () => (
     <View style={styles.content2}>
       <Text style={styles.textTitle}>Indirizzo di lavaggio</Text>
@@ -358,7 +352,7 @@ export default function Profile({ navigation }) {
                 longitudeDelta: 0.002,
               });
             }}
-            // value={carAddress}
+            // value={carAddressF}
             fetchDetails={true}
             onFail={(error) => console.error(error)}
             onNotFound={() => console.log("no results")}
@@ -366,7 +360,7 @@ export default function Profile({ navigation }) {
               key: global.PLACES_API,
               language: "en",
             }}
-            predefinedPlaces={[currentPlace]}
+            // predefinedPlaces={[currentPlace]}
             textInputProps={{
               InputComp: TextInput,
               // icon:{icon:"map-marker"},
@@ -388,12 +382,14 @@ export default function Profile({ navigation }) {
         nextStep="3"
         prevTitle="Car Name"
         nextTitle="Car Picture"
+        emptyCheck={getValues("carAddressF")}
       />
     </View>
   );
 
   const ScreenPicture = () => (
-    <View>
+    <View >
+      <Text style={styles.textTitle}>Picture</Text>
       {imageLowRes ? (
         <View>
           <Image
@@ -415,6 +411,7 @@ export default function Profile({ navigation }) {
           onPress={pickImage}
           icon="view-grid"
           style={styles.buttonItem}
+          labelStyle={{ fontSize: 25, height:40, lineHeight:36 }}
         >
           Gallery
         </Button>
@@ -423,35 +420,63 @@ export default function Profile({ navigation }) {
           onPress={takePicture}
           icon="camera"
           style={styles.buttonItem}
+          labelStyle={{ fontSize: 25, height:40, lineHeight:36 }}
         >
-          Take Picture
+          Camera
         </Button>
       </View>
       <NavButtonsArrows
         nextStep="4"
         prevTitle="Car Location"
         nextTitle="Save"
+        emptyCheck={imageLowRes}
       />
     </View>
   );
 
   const ScreenSave = () => (
-    <View>
-      {carTitle && carType ? (
-        <Button mode="contained" icon="content-save" onPress={handleSave}>
-          Save
+    <View style={styles.content}>
+      <Text style={styles.textTitle}>{getValues("carTitleF")}</Text>
+      <Text style={styles.textTitleM}>{getValues("carAddressF")}</Text>
+      <Image
+        source={{ uri: imageLowRes.localUri || imageLowRes.uri }}
+        style={styles.image}
+      />
+      <View style={styles.NavButtonsArrows}>
+        <Button
+          mode="outlined"
+          icon="arrow-left"
+          style={styles.buttonItem}
+          onPress={() => setStep(3)}
+          labelStyle={{ fontSize: 25, height:40, lineHeight:36 }}
+        >
+          Voltar
         </Button>
-      ) : (
-        <Text style={styles.textBottom}>
-          Devi impostare un titolo e caricare una foto dell'auto prima di
-          salvare
-        </Text>
-      )}
-      <Text style={styles.textBottom}>Type: {carType}</Text>
+        <Button
+          mode="contained-tonal"
+          icon="content-save"
+          style={styles.buttonItem}
+          onPress={handleSave}
+          labelStyle={{ fontSize: 25, height:40, lineHeight:36 }}
+        >
+          Salvar
+        </Button>
+      </View>
+      <Text>.</Text>
     </View>
   );
 
-  const NavButtonsArrows = (props: nextStep, nextTitle, prevTitle) => (
+  // const onSubmit = async (data) => {
+  //   await uploadImage(manipResult);
+  //   console.log(data);
+  // };
+
+  const NavButtonsArrows = (
+    props: nextStep,
+    nextTitle,
+    prevTitle,
+    emptyCheck
+  ) => (
     <View style={styles.NavButtonsArrows}>
       <TouchableOpacity
         style={styles.buttonNav}
@@ -460,7 +485,7 @@ export default function Profile({ navigation }) {
         }}
       >
         <Icon source="arrow-left" size={50} />
-        <Text style={{ width: "100%", textAlign: "center" }}>
+        <Text style={{ width: "100%", textAlign: "center", fontSize:20 }}>
           {props.prevTitle}
         </Text>
       </TouchableOpacity>
@@ -468,13 +493,16 @@ export default function Profile({ navigation }) {
       <TouchableOpacity
         style={styles.buttonNav}
         onPress={() => {
-          // carTitle ?
-          setStep(props.nextStep);
-          //  : onToggleSnackBar();
+          console.log("emptyCheck", props.emptyCheck);
+          props.emptyCheck !== "" &&
+          props.emptyCheck !== undefined &&
+          props.emptyCheck !== null
+            ? setStep(props.nextStep)
+            : onToggleSnackBar();
         }}
       >
         <Icon source="arrow-right" size={50} />
-        <Text style={{ width: "100%", textAlign: "center" }}>
+        <Text style={{ width: "100%", textAlign: "center", fontSize:20 }}>
           {props.nextTitle}
         </Text>
       </TouchableOpacity>
@@ -488,6 +516,7 @@ export default function Profile({ navigation }) {
       {step == 1 && <ScreenCarName />}
       {step == 2 && <ScreenLocation />}
       {step == 3 && <ScreenPicture />}
+      {step == 4 && <ScreenSave />}
 
       <Snackbar
         visible={visibleSnack}
@@ -524,11 +553,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     padding: 5,
   },
+  textTitleM: {
+    fontSize: 20,
+    marginBottom: 30,
+  },
   NavButtonsArrows: {
     zIndex: 20,
     display: "flex",
     flexDirection: "row",
-    // backgroundColor: "#99d",
+    backgroundColor: "#FFF",
     justifyContent: "center",
   },
   buttonNav: {
@@ -542,7 +575,11 @@ const styles = StyleSheet.create({
     // textAlign: "center",
     borderRadius: 120,
     height: 120,
-    backgroundColor: "#FFF",
+    // backgroundColor: "#9FF",
+  },
+  buttonItem: {
+    width: "44%",
+    margin: "3%",
   },
   scroll: {
     backgroundColor: "white",
@@ -563,10 +600,10 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 20,
     paddingLeft: 24,
-    borderRadius: 30,
+    borderRadius: 10,
     borderBottomWidth: 0,
-    borderTopEndRadius: 30,
-    borderTopStartRadius: 30,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
   },
   map: {
     width: "100%",
@@ -576,10 +613,6 @@ const styles = StyleSheet.create({
     flex: 1,
     // marginTop: 100,
     position: "absolute",
-  },
-  buttonItem: {
-    width: "50%",
-    // flexDirection:"row"
   },
   GooglePlacesAutocomplete: {
     zIndex: 10,

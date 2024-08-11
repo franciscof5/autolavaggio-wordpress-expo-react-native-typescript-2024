@@ -14,7 +14,7 @@ const ListVehicles = () => {
   const userObjectFull = useSelector( (state) => Object.values(state.currentUserApi.mutations)[1].data ) //[0].data
   //console.log("userObjectF", userObjectFull.id)
 
-  const { data, error, isError, isLoading } = vehicleApi.useGetVehiclesByUserIdQuery(userObjectFull.id);
+  const { data, error, isError, isLoading } = vehicleApi.useGetVehiclesByUserIdQuery({"token":userObject.token, "id":userObjectFull.id});
   useEffect(()=>{
     // data ? console.log("ListVehicles vehicleApi data[0]", data[0]) : null;
   })
@@ -37,8 +37,14 @@ const ListVehicles = () => {
                   <Text>
                     Username: { item.slug } 
                     Type: {item.vehicle_type} 
-                    Veh: { JSON.stringify(item.content) }
+                    {/* Veh: { item.content.raw.map((i)=>{ return i }) } */}
+                    Veh: { JSON.parse(item.content.raw).vehicle_address }
                     {/* ACF vehicle_type { JSON.stringify(item.acf.vehicle_type) } */}
+                    {/* { Object.entries(data).map(([key, value]) => (
+                      <div className="item" key={key}>
+                        {value}
+                      </div>
+                    ))} */}
                   </Text>
                 </View>
               </View>

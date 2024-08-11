@@ -1,9 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { useSelector } from "react-redux"
 import { Vehicle } from "./interfaces/IVehicles";
+import userApi from "../user/userApi";
+
+// const userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
 
 const vehicleApi = createApi({
   reducerPath: "vehicleApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://www.lavaggioapp.it/wp-json/wp/v2/" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://www.lavaggioapp.it/wp-json/wp/v2/",
+    // headers: {
+    //   Authorization: 'Bearer ' + global.TOKEN
+    // }
+  }),
   tagTypes: ["vehicle"],
   endpoints: (builder) => ({
     getVehicles: builder.query<Vehicle[], void>({
@@ -15,7 +24,17 @@ const vehicleApi = createApi({
       },
     }),
     getVehiclesByUserId: builder.query<Vehicle, number>({
-      query: (id) => `/vehicle?author=${id}`,
+      query (data) {
+        console.log("getVehiclesByUserId =", data.token)
+        return {
+          url: `/vehicle?author=${data.id}&context=edit`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + data.token
+          },
+        }
+      },
+      // query: (id) => `/vehicle?author=${id}&context=edit`,
       providesTags: ["vehicle"],
       // async onQueryStarted( console.log("d") ),
     }),

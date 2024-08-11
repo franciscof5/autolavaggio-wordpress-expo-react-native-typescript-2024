@@ -103,7 +103,7 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  global.PLACES_API = process.env.PLACES_API;
+  global.PLACES_API = process.env.NEW_PLACES_API;
   global.USER = process.env.SUSERR;
   global.PASS = process.env.PASS;
 
