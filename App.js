@@ -1,10 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { Platform, React, Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert, Title } from 'react-native';
-// import { StatusBar } from 'expo-status-bar';
-// import { Audio } from 'expo-av';
-// import { AppRegistry } from 'react-native';
-// import * as Device from 'expo-device';
-// import * as Notifications from 'expo-notifications';
 import {
   configureFonts,
   MD3LightTheme as DefaultTheme,
@@ -21,6 +16,11 @@ import { Provider, useSelector } from 'react-redux'
 // import Config from "react-native-config";
 // import { PLACES_API } from 'react-native-dotenv'
 // Config.PLACES_API; // 'https://myapi.com'
+// import { StatusBar } from 'expo-status-bar';
+// import { Audio } from 'expo-av';
+// import { AppRegistry } from 'react-native';
+// import * as Device from 'expo-device';
+// import * as Notifications from 'expo-notifications';
 
 const Stack = createStackNavigator();
 
@@ -96,12 +96,17 @@ import Register from "./screens/Register"
 import HomeMap from "./screens/HomeMap";
 import AddVehicle from "./screens/Vehicles/AddVehicle"
 import AddCarDetails from "./screens/Vehicles/AddCarDetails"
+import Checkout from "./screens/Checkout"
+import CreditCard from "./screens/CreditCard"
+
 
 export default function App() {
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  // const [expoPushToken, setExpoPushToken] = useState('');
+  // const [notification, setNotification] = useState(false);
+  // const notificationListener = useRef();
+  // const responseListener = useRef();
+  console.log("process.env.SUSERR", process.env.SUSERR)
+  console.log("process.env", process.env)
 
   global.PLACES_API = process.env.NEW_PLACES_API;
   global.USER = process.env.SUSERR;
@@ -115,9 +120,10 @@ export default function App() {
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Register" component={Register} />
-              <Stack.Screen name="HomeMap" component={HomeMap} />
-              <Stack.Screen name="AddVehicle" component={AddVehicle} />
-              <Stack.Screen name="AddCarDetails" component={AddCarDetails} />
+              <Stack.Screen name="Home" component={HomeMap} />
+              <Stack.Screen name="Add Vehicle" component={AddVehicle} />
+              <Stack.Screen name="Car Details" component={AddCarDetails} />
+              <Stack.Screen name="CreditCard" component={CreditCard} />
             </Stack.Navigator>
           </NavigationContainer>
         </RootSiblingParent>

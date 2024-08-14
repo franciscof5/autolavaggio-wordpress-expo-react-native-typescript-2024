@@ -25,7 +25,7 @@ import axios from "axios";
 import * as Location from "expo-location";
 //import GetLocation from 'react-native-get-location';
 import { useIsFocused } from "@react-navigation/native";
-
+import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
 // import { decrement, increment } from '../store/counter/counterSlice'
 import { getVehicles } from "../api/vehicle/vehicleSlice-offline";
@@ -70,6 +70,7 @@ export default function HomeMapTabs({ navigation }) {
         size="medium"
         variant="primary"
         style={styles.fab}
+        // label="Adicionar"
         onPress={() => navigation.navigate("AddVehicle")}
         />
       {/* <Button

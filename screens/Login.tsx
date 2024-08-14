@@ -40,6 +40,8 @@ export default function LoginScreen({ navigation }) {
       password: password,
     }).then((resp) => {
       console.log("loginUser resp", resp.data);
+      global.TOKEN = resp.data.token;
+
       if (resp.data.token) {
         console.log("loginUser token: ", resp.data.token);
         getFullUser({

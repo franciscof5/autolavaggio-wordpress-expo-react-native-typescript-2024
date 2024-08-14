@@ -1,23 +1,18 @@
-import { StyleSheet, View, Text, FlatList, Image, Button } from "react-native";
+import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import vehicleApi from "../../api/vehicle/vehicleApi";
 import LoadingModal from "../LoadingModal";
-import { List, MD3Colors, Avatar, Modal, Portal } from "react-native-paper";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { List, MD3Colors, Avatar } from "react-native-paper";
 
 const ListVehicles = () => {
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
-
   const userObject = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[0].data
   );
   const userObjectFull = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[1].data
   );
+
   const { data, error, isError, isLoading } =
     vehicleApi.useGetVehiclesByUserIdQuery({
       token: userObject.token,
@@ -35,13 +30,9 @@ const ListVehicles = () => {
               return (
                 <List.Item
                   style={styles.listItem}
-                  title={ item.title.rendered }
-                  key={item.id}
+                  title={item.title.rendered}
                   description={JSON.parse(item.content.raw).vehicle_address}
-                  onPress={() => {
-                    showModal();
-                    console.log("AGENDA");
-                  }}
+                  onPress={() => console.log("AGENDA")}
                   left={() => (
                     <Image
                       source={{
@@ -50,41 +41,22 @@ const ListVehicles = () => {
                       style={{
                         width: 56,
                         height: 56,
-                        borderRadius: 10,
                       }}
                     />
+                    // <Avatar.Image size={24} source={require(item.featured_image_url)} />
+                    //<List.Icon color={MD3Colors.tertiary70} icon="folder" />
                   )}
+
+                  // left={() => const MyComponent = () => (
+                  //   <Avatar.Image size={24} source={item.featured_image_url} />
+                  //   // <List.Icon icon= />}
+                  // )}
                 />
               );
             })}
           </List.Section>
         </View>
       )}
-      <Modal
-        visible={visible}
-        onDismiss={hideModal}
-        contentContainerStyle={styles.modal}
-      >
-        <Text style={styles.modalText}>Services avaiable in your region</Text>
-        <List.Section style={styles.listList}>
-          <List.Item
-            title="Delivery Eco Wash"
-            style={styles.listItem}
-            onPress={()=>{console.log("aquire")}}
-            description="EURO 15"
-            left={() => (
-              <Image
-                source={require("./../../assets/images/car-wash-png-black-and-white-transparent-car-wash-black-and-white-638077.jpg")}
-                style={{
-                  width: 56,
-                  height: 56,
-                }}
-              />
-            )}
-          />
-        </List.Section>
-        
-      </Modal>
     </View>
   );
 };
@@ -92,7 +64,6 @@ const ListVehicles = () => {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    backgroundColor: "#FFF",
   },
   list: {
     padding: 10,
@@ -102,27 +73,16 @@ const styles = StyleSheet.create({
     // backgroundColor: "#09d",
   },
   listItem: {
-    backgroundColor: "#EEE",
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
+    // flexDirection: "row",
+    // backgroundColor: "#FFF",
+    // marginBottom:4,
+    // padding: 3,
   },
   listItemTitle: {
     fontWeight: "bold",
   },
-  modalText: {
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   textContainer: {
     flex: 1,
-  },
-  modal: {
-    backgroundColor: "white",
-    padding: 20,
-    height: "50%",
-    position: "absolute",
-    width: "100%",
   },
 });
 
