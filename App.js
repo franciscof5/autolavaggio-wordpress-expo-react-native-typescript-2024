@@ -96,8 +96,6 @@ import Register from "./screens/Register"
 import HomeMap from "./screens/HomeMap";
 import AddVehicle from "./screens/Vehicles/AddVehicle"
 import ListVehicles from "./screens/Vehicles/ListVehicles"
-import AddCarDetails from "./screens/Vehicles/AddCarDetails"
-import Checkout from "./screens/Checkout"
 import CreditCard from "./screens/CreditCard"
 
 
@@ -123,7 +121,6 @@ export default function App() {
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="Home" component={HomeMap} />
               <Stack.Screen name="Add Vehicle" component={AddVehicle} />
-              <Stack.Screen name="Car Details" component={AddCarDetails} />
               <Stack.Screen name="CreditCard" component={CreditCard} />
               <Stack.Screen name="ListVehicles" component={ListVehicles} />
             </Stack.Navigator>

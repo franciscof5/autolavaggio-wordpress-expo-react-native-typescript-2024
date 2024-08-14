@@ -22,14 +22,10 @@ import {
 } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
-// import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-//import GetLocation from 'react-native-get-location';
 import { useIsFocused } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
-// import { decrement, increment } from '../store/counter/counterSlice'
-import { getVehicles } from "../api/vehicle/vehicleSlice-offline";
 import ListVehicles from "./Vehicles/ListVehicles"
 
 Notifications.setNotificationHandler({

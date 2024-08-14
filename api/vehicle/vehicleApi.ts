@@ -1,9 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { useSelector } from "react-redux"
-import { Vehicle } from "./interfaces/IVehicles";
-import userApi from "../user/userApi";
-
-// const userObject = useSelector((state) => Object.values(state.currentUserApi.mutations)[0].data )
 
 const vehicleApi = createApi({
   reducerPath: "vehicleApi",

@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import vehicleApi from "./vehicle/vehicleApi";
-import { vehicleSlice } from "./vehicle/vehicleSlice";
-//
+import orderApi from "./order/orderApi";
 import { currentUserApi } from './currentUserApi/currentUserApi';
-// import { currentUserSlice } from './currentUserApi/currentUserSlice'
-//
 import mediaApi from './media/mediaApi'
 //todo: fazer persistência / persistent reducer
+
 export const store = configureStore({
   reducer: {
     //
     [vehicleApi.reducerPath]: vehicleApi.reducer,
+    //
+    [orderApi.reducerPath]: orderApi.reducer,
     //
     [currentUserApi.reducerPath]: currentUserApi.reducer,
     //
@@ -18,19 +18,9 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
-      vehicleApi.middleware, 
+      vehicleApi.middleware,
+      orderApi.middleware,
       currentUserApi.middleware,
       mediaApi.middleware,
     ),
 });
-
-// import { configureStore } from '@reduxjs/toolkit'
-// import counterReducer from './counter/counterSlice'
-// import vehicleReducer from './vehicle/vehicleSlice-offline'
-
-// export const store = configureStore({
-//   reducer: {
-//     counter: counterReducer,
-//     vehicle: vehicleReducer,
-//   },
-// })

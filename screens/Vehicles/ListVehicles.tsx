@@ -15,19 +15,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 const ListVehicles = () => {
+  const [selectedVehicleId, setSelectedVehicleId] = React.useState(false);
+  const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
+  const [selectedVehicleAddress, setSelectedVehicleAddress] = React.useState(false);
+  //
   const [visible, setVisible] = React.useState(false);
   const navigation = useNavigation();
-  const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
-  const [selectedVehicleAddress, setSelectedVehicleAddress] =
-    React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerLeft: () => null,
-  //   });
-  // }, [navigation]);
 
   const userObject = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[0].data
@@ -35,11 +31,12 @@ const ListVehicles = () => {
   const userObjectFull = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[1].data
   );
+  const dataSend = {
+    token: userObject.token,
+    id: userObjectFull.id,
+  }
   const { data, error, isError, isLoading } =
-    vehicleApi.useGetVehiclesByUserIdQuery({
-      token: userObject.token,
-      id: userObjectFull.id,
-    });
+    vehicleApi.useGetVehiclesByUserIdQuery(dataSend);
   return (
     <View style={styles.container}>
       {isLoading ? (

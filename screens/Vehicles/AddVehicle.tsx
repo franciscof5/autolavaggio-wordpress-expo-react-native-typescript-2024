@@ -234,7 +234,7 @@ export default function Profile({ navigation }) {
     }).then((data) => {
       console.log(data);
       if (data.data.id) {
-        navigation.navigate("HomeMap");
+        navigation.navigate("Home");
       }
     });
 
@@ -621,3 +621,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+/*
+const mockCarTypes = {
+  types: [
+    {
+      name: "Micro",
+      image: require("../../assets/images/car-types/micro-car-13314.png"),
+    },
+    {
+      name: "Hatchback",
+      image: require("../../assets/images/car-types/hatchback-car-13312.png"),
+    },
+    {
+      name: "Sedan",
+      image: require("../../assets/images/car-types/sedan-car-13311.png"),
+    },
+    {
+      name: "SUV",
+      image: require("../../assets/images/car-types/suv-car-13321.png"),
+    },
+    {
+      name: "Pickup",
+      image: require("../../assets/images/car-types/pickup-car-13322.png"),
+    },
+    {
+      name: "Van",
+      image: require("../../assets/images/car-types/van-truck-car-13329.png"),
+    },
+    {
+      name: "Cabriolet",
+      image: require("../../assets/images/car-types/cabriolet-car-13316.png"),
+    },
+    {
+      name: "Bus",
+      image: require("../../assets/images/car-types/bus-13331.png"),
+    },
+  ],
+};*/
