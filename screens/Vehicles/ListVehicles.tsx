@@ -1,16 +1,33 @@
 import { StyleSheet, View, Text, FlatList, Image, Button } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import vehicleApi from "../../api/vehicle/vehicleApi";
 import LoadingModal from "../LoadingModal";
-import { List, MD3Colors, Avatar, Modal, Portal } from "react-native-paper";
+import {
+  FAB,
+  List,
+  MD3Colors,
+  Avatar,
+  Modal,
+  Portal,
+} from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 const ListVehicles = () => {
   const [visible, setVisible] = React.useState(false);
+  const navigation = useNavigation();
+  const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
+  const [selectedVehicleAddress, setSelectedVehicleAddress] =
+    React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerLeft: () => null,
+  //   });
+  // }, [navigation]);
 
   const userObject = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[0].data
@@ -35,11 +52,15 @@ const ListVehicles = () => {
               return (
                 <List.Item
                   style={styles.listItem}
-                  title={ item.title.rendered }
+                  title={item.title.rendered}
                   key={item.id}
                   description={JSON.parse(item.content.raw).vehicle_address}
                   onPress={() => {
                     showModal();
+                    setSelectedVehicleTitle(item.title.rendered);
+                    setSelectedVehicleAddress(
+                      JSON.parse(item.content.raw).vehicle_address
+                    );
                     console.log("AGENDA");
                   }}
                   left={() => (
@@ -64,13 +85,20 @@ const ListVehicles = () => {
         visible={visible}
         onDismiss={hideModal}
         contentContainerStyle={styles.modal}
+        // style={styles.modal}
       >
-        <Text style={styles.modalText}>Services avaiable in your region</Text>
+        <Text style={styles.modalText}>
+          Services available for: {"\n"} {selectedVehicleTitle}, at{" "}
+          {selectedVehicleAddress}{" "}
+        </Text>
         <List.Section style={styles.listList}>
           <List.Item
             title="Delivery Eco Wash"
             style={styles.listItem}
-            onPress={()=>{console.log("aquire")}}
+            onPress={() => {
+              console.log("aquire");
+              navigation.navigate("CreditCard");
+            }}
             description="EURO 15"
             left={() => (
               <Image
@@ -83,7 +111,6 @@ const ListVehicles = () => {
             )}
           />
         </List.Section>
-        
       </Modal>
     </View>
   );
@@ -110,19 +137,22 @@ const styles = StyleSheet.create({
   listItemTitle: {
     fontWeight: "bold",
   },
+  modal: {
+    backgroundColor: "white",
+    padding: 20,
+    height: "60%",
+    paddingBottom:50,
+    position: "absolute",
+    bottom: -50,
+    zIndex: 9999999,
+    width: "100%",
+  },
   modalText: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "center",
   },
   textContainer: {
     flex: 1,
-  },
-  modal: {
-    backgroundColor: "white",
-    padding: 20,
-    height: "50%",
-    position: "absolute",
-    width: "100%",
   },
 });
 

@@ -95,6 +95,7 @@ import Login from "./screens/Login"
 import Register from "./screens/Register"
 import HomeMap from "./screens/HomeMap";
 import AddVehicle from "./screens/Vehicles/AddVehicle"
+import ListVehicles from "./screens/Vehicles/ListVehicles"
 import AddCarDetails from "./screens/Vehicles/AddCarDetails"
 import Checkout from "./screens/Checkout"
 import CreditCard from "./screens/CreditCard"
@@ -106,11 +107,11 @@ export default function App() {
   // const notificationListener = useRef();
   // const responseListener = useRef();
   console.log("process.env.SUSERR", process.env.SUSERR)
-  console.log("process.env", process.env)
+  console.log("process", process)
 
   global.PLACES_API = process.env.NEW_PLACES_API;
-  global.USER = process.env.SUSERR;
-  global.PASS = process.env.PASS;
+  global.USER = process.env.SUSERR ? process.env.SUSERR : "foca";
+  global.PASS = process.env.PASS ? process.env.PASS : "931777";
 
   return (
     <Provider store={store}>
@@ -124,6 +125,7 @@ export default function App() {
               <Stack.Screen name="Add Vehicle" component={AddVehicle} />
               <Stack.Screen name="Car Details" component={AddCarDetails} />
               <Stack.Screen name="CreditCard" component={CreditCard} />
+              <Stack.Screen name="ListVehicles" component={ListVehicles} />
             </Stack.Navigator>
           </NavigationContainer>
         </RootSiblingParent>

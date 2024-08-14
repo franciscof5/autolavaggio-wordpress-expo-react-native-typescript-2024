@@ -18,6 +18,7 @@ import {
   MD3Colors,
   PaperProvider,
   FAB,
+  Modal,
 } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import axios from "axios";
@@ -29,7 +30,7 @@ import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
 // import { decrement, increment } from '../store/counter/counterSlice'
 import { getVehicles } from "../api/vehicle/vehicleSlice-offline";
-import ListVehicles from "./Vehicles/ListVehicles";
+import ListVehicles from "./Vehicles/ListVehicles"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -52,6 +53,13 @@ const NotificationsRoute = () => <Text>Notifications</Text>;
 
 //const MyComponent = ({ navigation }) => {
 export default function HomeMapTabs({ navigation }) {
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
+  const [selectedVehicleAddress, setSelectedVehicleAddress] =
+    React.useState(false);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => null,
@@ -64,7 +72,7 @@ export default function HomeMapTabs({ navigation }) {
 
   const CarsRoute = () => (
     <View style={styles.container}>
-      <ListVehicles />
+      <ListVehicles showModal={this.showModal} />
       <FAB
         icon="plus"
         size="medium"
@@ -73,6 +81,34 @@ export default function HomeMapTabs({ navigation }) {
         // label="Adicionar"
         onPress={() => navigation.navigate("AddVehicle")}
         />
+      <Modal
+        visible={visible}
+        onDismiss={hideModal}
+        contentContainerStyle={styles.modal}
+        // style={styles.modal}
+      >
+        <Text style={styles.modalText}>Services available for: {"\n"} {selectedVehicleTitle}, at {selectedVehicleAddress} </Text>
+        <List.Section style={styles.listList}>
+          <List.Item
+            title="Delivery Eco Wash"
+            style={styles.listItem}
+            onPress={() => {
+              console.log("aquire");
+              navigation.navigate("CreditCard")
+            }}
+            description="EURO 15"
+            left={() => (
+              <Image
+                source={require("./../assets/images/car-wash-png-black-and-white-transparent-car-wash-black-and-white-638077.jpg")}
+                style={{
+                  width: 56,
+                  height: 56,
+                }}
+              />
+            )}
+          />
+        </List.Section>
+      </Modal>
       {/* <Button
         mode="contained"
         icon="plus"

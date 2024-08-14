@@ -12,7 +12,7 @@ const lavagem1 = require("../assets/images/foto-lavagem-1.jpg");
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState(global.USER)
   const [password, setPassword] = useState(global.PASS)
-  
+
   const [loginUser, { data, error, isError, isLoading }] =
     useLoginUserMutation();
 
@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
           token: resp.data.token,
         }).then((resp)=>{
           console.log("getFullUser resp", resp);
-          navigation.navigate("HomeMap");
+          navigation.navigate("Home");
         });
       }
     });

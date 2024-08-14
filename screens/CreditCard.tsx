@@ -15,7 +15,7 @@ import {
   CreditCardFormField,
   ValidationState,
 } from 'react-native-credit-card-input';
-
+import { Button } from "react-native-paper"
 const s = StyleSheet.create({
   container: {
     width: '100%',
@@ -100,7 +100,14 @@ export default function Example() {
           onFocusField={setFocusedField}
         />
       )}
-
+      <Button
+        onPress={console.log("PAY")}
+        mode="contained"
+        style={{width:"50%", marginLeft:"25%"}}
+        disabled={ formData?.valid ? false : true }
+        >
+        PAGAR EUR 15
+      </Button>
       <View style={s.infoContainer}>
         <Text style={s.info}>
           {formData?.valid
