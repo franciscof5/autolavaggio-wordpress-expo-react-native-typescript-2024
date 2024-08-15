@@ -11,6 +11,8 @@ import Constants from "expo-constants";
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
+import { Appbar, Menu } from 'react-native-paper';
+import { getHeaderTitle } from '@react-navigation/elements';
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
 // import {PLACES_API} from '@env'
 // import Config from "react-native-config";
@@ -116,7 +118,12 @@ export default function App() {
       <PaperProvider theme={theme}>
         <RootSiblingParent>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator 
+              initialRouteName="Login"
+              screenOptions={{
+                header: (props) => <CustomNavigationBar {...props} />
+              }}
+              >
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="Home" component={HomeMap} />
@@ -128,6 +135,58 @@ export default function App() {
         </RootSiblingParent>
       </PaperProvider>
     </Provider>
+  );
+}
+
+
+const CustomNavigationBar = ({
+  navigation,
+  route,
+  options,
+  back,
+} ) => {
+  const [visible, setVisible] = useState(false);
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const title = getHeaderTitle(options, route.name);
+
+  return (
+    <Appbar.Header>
+      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+      <Appbar.Content title={title} />
+      {back ? ( <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={
+            <Appbar.Action
+              icon="dots-vertical"
+              onPress={openMenu}
+            />
+          }>
+          <Menu.Item
+            onPress={() => {
+              console.log('Option 1 was pressed');
+              navigation.navigate("Login")
+            }}
+            title="Logout"
+          />
+          {/* <Menu.Item
+            onPress={() => {
+              console.log('Option 2 was pressed');
+            }}
+            title="Option 2"
+          />
+          <Menu.Item
+            onPress={() => {
+              console.log('Option 3 was pressed');
+            }}
+            title="Option 3"
+            disabled
+          /> */}
+        </Menu>
+      ) : null}
+    </Appbar.Header>
   );
 }
 
