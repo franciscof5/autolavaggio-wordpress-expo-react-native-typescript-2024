@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, FlatList, Image, Button } from "react-native";
 import React, { useEffect, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
-import vehicleApi from "../../api/vehicle/vehicleApi";
+import serviceOrderApi from "../../api/serviceOrder/serviceOrderApi";
 import LoadingModal from "../LoadingModal";
 import {
   FAB,
@@ -10,16 +10,13 @@ import {
   Avatar,
   Modal,
   Portal,
+  Icon,
 } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ListVehicles = () => {
-  const [selectedVehicleId, setSelectedVehicleId] = React.useState(false);
-  const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
-  const [selectedVehicleAddress, setSelectedVehicleAddress] =
-    React.useState(false);
+export default function ListServiceOrders() {
   //
   const [visible, setVisible] = React.useState(false);
   const navigation = useNavigation();
@@ -36,38 +33,17 @@ const ListVehicles = () => {
   const dataSend = {
     token: userObject.token,
     id: userObjectFull.id,
+    post_status: "all",
   };
   const { data, error, isError, isLoading } =
-    vehicleApi.useGetVehiclesByUserIdQuery(dataSend);
+    serviceOrderApi.useGetServiceOrdersByUserIdQuery(dataSend);
 
-  const buy = async () => {
-    console.log("buy");
-    showModal();
-    // setSelectedVehicleId(id);
-    // setSelectedVehicleTitle(title);
-    // setSelectedVehicleAddress(address);
-    // const storeData = async () => {
-      try {
-        await AsyncStorage.setItem("order", JSON.stringify({
-          user_display_name: userObject.user_display_name,
-          id: selectedVehicleId,
-          title: selectedVehicleTitle,
-          address: selectedVehicleAddress,
-        }));
-        navigation.navigate("CreditCard");
-      } catch (e) {
-        console.log("e", e);
-        // saving error
-      }
-    // };
-  };
   return (
     <View style={styles.container}>
       {isLoading ? (
         <LoadingModal isLoading={isLoading} />
       ) : (
         <View>
-          {/* <Text>Macchinas de {userObject.user_display_name}</Text> */}
           <List.Section style={styles.listList}>
             {data.map((item) => {
               return (
@@ -75,26 +51,29 @@ const ListVehicles = () => {
                   style={styles.listItem}
                   title={item.title.rendered}
                   key={item.id}
-                  description={JSON.parse(item.content.raw).vehicle_address}
+                  description={
+                    item.date.slice(8, 10) +
+                    "/" +
+                    item.date.slice(5, 7) +
+                    " - " +
+                    JSON.parse(item.content.raw).vehicle_title +
+                    " - " +
+                    JSON.parse(item.content.raw).vehicle_address
+                  }
                   onPress={() => {
-                    showModal();
-                    setSelectedVehicleId(item.id);
-                    setSelectedVehicleTitle(item.title.rendered);
-                    setSelectedVehicleAddress(
-                      JSON.parse(item.content.raw).vehicle_address
-                    );
-                    console.log("AGENDA");
+                    // showModal();
+                    // setSelectedVehicleId(item.id);
+                    // setSelectedVehicleTitle(item.title.rendered);
+                    // setSelectedVehicleAddress(
+                    //   JSON.parse(item.content.raw).vehicle_address
+                    // );
+                    console.log("ORDER PRESS");
                   }}
                   left={() => (
-                    <Image
-                      source={{
-                        uri: item.featured_image_url,
-                      }}
-                      style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 10,
-                      }}
+                    <Icon
+                      source="clipboard-clock"
+                      // color={MD3Colors.error50}
+                      size={50}
                     />
                   )}
                 />
@@ -110,30 +89,29 @@ const ListVehicles = () => {
         // style={styles.modal}
       >
         <Text style={styles.modalText}>
-          Services available for: {"\n"} {selectedVehicleTitle}, at{" "}
-          {selectedVehicleAddress}{" "}
+          Services available for: {"\n"} {}, at {}{" "}
         </Text>
         <List.Section style={styles.listList}>
           <List.Item
             title="Delivery Eco Wash"
             style={styles.listItem}
-            onPress={()=>{buy()}}
+            // onPress={()=>{buy()}}
             description="EURO 15"
-            left={() => (
-              <Image
-                source={require("./../../assets/images/car-wash-png-black-and-white-transparent-car-wash-black-and-white-638077.jpg")}
-                style={{
-                  width: 56,
-                  height: 56,
-                }}
-              />
-            )}
+            // left={() => (
+            //   <Image
+            //     source={require("./../../assets/images/car-wash-png-black-and-white-transparent-car-wash-black-and-white-638077.jpg")}
+            //     style={{
+            //       width: 56,
+            //       height: 56,
+            //     }}
+            //   />
+            // )}
           />
         </List.Section>
       </Modal>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -174,5 +152,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default ListVehicles;

@@ -27,6 +27,8 @@ import { useIsFocused } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
 import ListVehicles from "./Vehicles/ListVehicles"
+import ListOrders from "./ServiceOrders/ListOrders"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -116,13 +118,11 @@ export default function HomeMapTabs({ navigation }) {
     </View>
   );
 
-  const Counter = () => (
+  const OrdersRoute = () => (
     <View>
-      <Text>V: {count}</Text>
-      <Button onPress={() => dispatch(increment())}>Inc</Button>
-      <Button onPress={() => dispatch(decrement())}>Dec</Button>
+      <ListOrders />
     </View>
-  );
+  )
 
   const HomeAppMap = () => (
     <PaperProvider>
@@ -134,6 +134,7 @@ export default function HomeMapTabs({ navigation }) {
       </View>
     </PaperProvider>
   );
+
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -150,8 +151,8 @@ export default function HomeMapTabs({ navigation }) {
       unfocusedIcon: "map-marker-outline",
     },
     { 
-      key: "recents", 
-      title: "Recents", 
+      key: "orders", 
+      title: "Orders", 
       focusedIcon: "history" 
     },
     {
@@ -165,8 +166,8 @@ export default function HomeMapTabs({ navigation }) {
   const renderScene = BottomNavigation.SceneMap({
     maps: HomeAppMap,
     cars: CarsRoute,
-    recents: RecentsRoute,
-    notifications: Counter,
+    orders: OrdersRoute,
+    notifications: RecentsRoute,
   });
 
   const [mapRegion, setMapRegion] = useState({

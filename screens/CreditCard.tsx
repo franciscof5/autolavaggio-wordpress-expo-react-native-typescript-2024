@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import {
   Platform,
   ScrollView,
@@ -17,26 +17,30 @@ import {
   ValidationState,
 } from "react-native-credit-card-input";
 import { useSelector } from "react-redux";
-import { Button } from "react-native-paper";
-import orderApi from "../api/order/orderApi";
+import { Button, Searchbar } from "react-native-paper";
+import serviceOrderApi from "../api/serviceOrder/serviceOrderApi";
 import LoadingModal from "../LoadingModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React = require("react");
+import { useNavigation } from "@react-navigation/native";
 
 const toStatusIcon = (status?: ValidationState) =>
   status === "valid" ? "✅" : status === "invalid" ? "❌" : "❓";
 
 export default function Example() {
+  const [order, setOrder] = useState(null);
   const [useLiteInput, setUseLiteInput] = useState(false);
-
   const [focusedField, setFocusedField] = useState<CreditCardFormField>();
-
   const [formData, setFormData] = useState<CreditCardFormData>();
+  const [loadingVoucher, setLoadingVoucher] = useState(false)
+  const navigation = useNavigation();
 
   const userObject = useSelector(
     (state) => Object.values(state.currentUserApi.mutations)[0].data
   );
 
-  const [addOrder, { data, error, isError, isLoading }] =
-    orderApi.useAddOrderMutation();
+  const [addServiceOrder, { data, error, isError, isLoading }] =
+  serviceOrderApi.useAddServiceOrderMutation();
 
   const pay = async () => {
     Keyboard.dismiss();
@@ -44,14 +48,16 @@ export default function Example() {
 
     let r = null;
 
-    r = await addOrder({
-      title: "Order from",
+    r = await addServiceOrder({
+      title: "Order from " + order.user_display_name,
       token: userObject.token,
       content: JSON.stringify({
         VehicleID: 2,
         ProviderID: 5, // sera definido no futuro
-        Status: 2,
-        Data: "12/02/2024",
+        vehicle_id: order.id,
+        vehicle_title: order.title,
+        vehicle_address: order.address,
+        // Data: "12/02/2024",
         // vehicle_type: carType,
         // vehicle_address: carAddress,
         // vehicle_position: {
@@ -66,23 +72,45 @@ export default function Example() {
       console.log(data);
       if (data.data.id) {
         console.log("Order created");
-        // navigation.navigate("Home");
+        navigation.navigate("Home");
       }
     });
 
-    console.log("r", r, mapRegion);
+    console.log("r", r);
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        let jsonValue = await AsyncStorage.getItem("order");
+        jsonValue != null ? (jsonValue = JSON.parse(jsonValue)) : null;
+        // JSON.parse(jsonValue)
+        console.log("getData jsonValue", jsonValue.address);
+        setOrder(jsonValue);
+        // return jsonValue;
+      } catch (e) {
+        // error reading value
+        console.log("e", e);
+      }
+    };
+    order ? null : getData();
+  });
 
   return (
     <ScrollView contentContainerStyle={s.container}>
-      <Switch
+      <Text style={{ textAlign: "center", width: "80%", marginLeft: "10%" }}>
+        Order - {/* { order.title }, { order.addrress } */}
+        {order ? order.title : "loading..."},{" "}
+        {order ? order.address : "loading..."}, EUR 15
+      </Text>
+      {/* <Switch
         style={s.switch}
         onValueChange={(v) => {
           setUseLiteInput(v);
           setFormData(undefined);
         }}
         value={useLiteInput}
-      />
+      /> */}
 
       <CreditCardView
         focusedField={focusedField}
@@ -108,6 +136,27 @@ export default function Example() {
           onFocusField={setFocusedField}
         />
       )}
+      <Searchbar 
+        mode="bar"
+        // right=""
+        traileringIcon="cash-plus"
+        loading={loadingVoucher}
+        // elevation="1"
+        // inputStyle={{backgroundColor:"#EEE"}}
+        icon="ticket-percent"
+        style={{margin: "5%"}}
+        onChangeText={()=>{
+          console.log("VOUCHE"); 
+          setTimeout(()=>{setLoadingVoucher(false)}, 1000);
+          setLoadingVoucher(true)}
+        }
+        onIconPress={()=>{
+          console.log("VOUCHE"); 
+          setTimeout(()=>{setLoadingVoucher(false)}, 1000);
+          setLoadingVoucher(true)}
+        }
+        placeholder="Optional: do you have a voucher?"
+      />
       <Button
         onPress={() => {
           console.log("PAY");

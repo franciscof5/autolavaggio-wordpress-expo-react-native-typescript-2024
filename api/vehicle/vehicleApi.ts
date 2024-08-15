@@ -10,15 +10,15 @@ const vehicleApi = createApi({
   }),
   tagTypes: ["vehicle"],
   endpoints: (builder) => ({
-    getVehicles: builder.query<Vehicle[], void>({
+    getVehicles: builder.query<any, any>({
       query: () => "/vehicle",
       providesTags: ["vehicle"],
-      transformResponse: (response: Vehicle[]) => {
+      transformResponse: (response: any) => {
         console.log("response vehicle: ", response[0]);
         return response.reverse();
       },
     }),
-    getVehiclesByUserId: builder.query<Vehicle, number>({
+    getVehiclesByUserId: builder.query<any, any>({
       query (data) {
         console.log("getVehiclesByUserId =", data.token)
         return {

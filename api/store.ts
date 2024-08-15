@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import vehicleApi from "./vehicle/vehicleApi";
-import orderApi from "./order/orderApi";
+import orderApi from "./serviceOrder/serviceOrderApi";
 import { currentUserApi } from './currentUserApi/currentUserApi';
 import mediaApi from './media/mediaApi'
 //todo: fazer persistência / persistent reducer
