@@ -49,7 +49,6 @@ const RecentsRoute = () => <Text>Recents</Text>;
 
 const NotificationsRoute = () => <Text>Notifications</Text>;
 
-//const MyComponent = ({ navigation }) => {
 export default function HomeMapTabs({ navigation }) {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
@@ -58,15 +57,14 @@ export default function HomeMapTabs({ navigation }) {
   const [selectedVehicleAddress, setSelectedVehicleAddress] =
     React.useState(false);
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => null,
-    });
-    userLocation();
-  }, [navigation]);
-  const isFocused = useIsFocused();
-  // const count = useSelector((state) => state.counter.value)
-  // const dispatch = useDispatch()
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerLeft: () => null,
+  //   });
+  //   userLocation();
+  // }, [navigation]);
+  // const isFocused = useIsFocused();
+
 
   const CarsRoute = () => (
     <View style={styles.container}>
@@ -77,7 +75,7 @@ export default function HomeMapTabs({ navigation }) {
         variant="primary"
         style={styles.fab}
         // label="Adicionar"
-        onPress={() => navigation.navigate("AddVehicle")}
+        onPress={() => navigation.navigate("Add Vehicle")}
         />
       <Modal
         visible={visible}

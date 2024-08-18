@@ -36,12 +36,9 @@ import AddVehicle from "./screens/Vehicles/AddVehicle"
 import ListVehicles from "./screens/Vehicles/ListVehicles"
 import CreditCard from "./screens/CreditCard"
 
+const Stack = createStackNavigator();
 
 export default function App() {
-  // const [expoPushToken, setExpoPushToken] = useState('');
-  // const [notification, setNotification] = useState(false);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
   console.log("process.env.SUSERR", process.env.SUSERR)
   console.log("process", process)
 
@@ -74,7 +71,6 @@ export default function App() {
   );
 }
 
-
 const CustomNavigationBar = ({
   navigation,
   route,
@@ -89,8 +85,9 @@ const CustomNavigationBar = ({
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('userToken');
-      setIsAuthenticated(false);
+      await AsyncStorage.removeItem('userObject');
+      await AsyncStorage.removeItem('userObjectFull');
+      navigation.navigate("Login")
     } catch (error) {
       console.error('Failed to log out.', error);
     }
@@ -112,7 +109,8 @@ const CustomNavigationBar = ({
           <Menu.Item
             onPress={() => {
               console.log('Option 1 was pressed');
-              navigation.navigate("Login")
+              // navigation.navigate("Login")
+              logout()
             }}
             title="Logout"
           />
@@ -148,7 +146,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const Stack = createStackNavigator();
 
 const fontConfig = {
   customVariant: {

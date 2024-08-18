@@ -14,12 +14,12 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { skipToken } from '@reduxjs/toolkit/query/react';
-import { useCheckAuthentication } from '../../api/hooks/useCheckAuthentication';
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import { useCheckAuthentication } from "../../api/hooks/useCheckAuthentication";
 
 const ListVehicles = () => {
   const { userObject, userObjectFull, logout } = useCheckAuthentication();
-    //
+  //
   const [selectedVehicleId, setSelectedVehicleId] = React.useState(false);
   const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
   const [selectedVehicleAddress, setSelectedVehicleAddress] =
@@ -31,7 +31,6 @@ const ListVehicles = () => {
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  
   // const userObject = AsyncStorage.getItem('userObject');
   // const userObjectFull = AsyncStorage.getItem('userObjectFull');
 
@@ -62,8 +61,6 @@ const ListVehicles = () => {
     }
     // };
   };
-  console.log("1 userObject ", userObject);
-  console.log("1 userObjectFull ", userObjectFull);
 
   // Hook fora de condicionais
   const { data, error, isError, isLoading } =
@@ -76,15 +73,9 @@ const ListVehicles = () => {
   if (!userObject || !userObjectFull) {
     return <Text>Loading...</Text>;
   }
-  console.log("2 userObject ", userObject);
-  console.log("2 userObjectFull ", userObjectFull);
-  // const dataSend = {
-  //   token: userObject.token,
-  //   id: userObjectFull.id,
-  // };
-  // console.log("dataSend", dataSend)
-  // const { data, error, isError, isLoading } =
-  //   vehicleApi.useGetVehiclesByUserIdQuery(dataSend);
+  // console.log("2 userObject ", userObject);
+  // console.log("2 userObjectFull ", userObjectFull);
+  
   return (
     <View style={styles.container}>
       {isLoading ? (

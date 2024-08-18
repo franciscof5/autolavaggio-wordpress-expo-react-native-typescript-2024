@@ -15,29 +15,33 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import { useCheckAuthentication } from "../../api/hooks/useCheckAuthentication";
 
 export default function ListServiceOrders() {
+  const { userObject, userObjectFull, logout } = useCheckAuthentication();
   //
   const [visible, setVisible] = React.useState(false);
   const navigation = useNavigation();
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  const userObject = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[0].data
-  );
-  const userObjectFull = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[1].data
-  );
-  const dataSend = {
-    token: userObject.token,
-    id: userObjectFull.id,
-    post_status: "all",
-  };
+  // const dataSend = ;
   const { data, error, isError, isLoading } =
-    serviceOrderApi.useGetServiceOrdersByUserIdQuery(dataSend);
-
+    serviceOrderApi.useGetServiceOrdersByUserIdQuery(
+      userObject && userObjectFull
+        ? {
+            token: userObject.token,
+            id: userObjectFull.id,
+            post_status: "all",
+          }
+        : skipToken
+    );
+  if (!userObject || !userObjectFull) {
+    return <Text>Loading...</Text>;
+  }
   return (
     <View style={styles.container}>
       {isLoading ? (

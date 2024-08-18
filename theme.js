@@ -1,4 +1,3 @@
-const Stack = createStackNavigator();
 
 const fontConfig = {
   customVariant: {
