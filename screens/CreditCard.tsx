@@ -21,23 +21,22 @@ import { Button, Searchbar } from "react-native-paper";
 import serviceOrderApi from "../api/serviceOrder/serviceOrderApi";
 import LoadingModal from "../LoadingModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React = require("react");
+// import React = require("react");
 import { useNavigation } from "@react-navigation/native";
+import { useCheckAuthentication } from "../api/hooks/useCheckAuthentication";
+
 
 const toStatusIcon = (status?: ValidationState) =>
   status === "valid" ? "✅" : status === "invalid" ? "❌" : "❓";
 
 export default function Example() {
+  const { userObject, userObjectFull, logout } = useCheckAuthentication();
   const [order, setOrder] = useState(null);
   const [useLiteInput, setUseLiteInput] = useState(false);
   const [focusedField, setFocusedField] = useState<CreditCardFormField>();
   const [formData, setFormData] = useState<CreditCardFormData>();
   const [loadingVoucher, setLoadingVoucher] = useState(false)
   const navigation = useNavigation();
-
-  const userObject = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[0].data
-  );
 
   const [addServiceOrder, { data, error, isError, isLoading }] =
   serviceOrderApi.useAddServiceOrderMutation();

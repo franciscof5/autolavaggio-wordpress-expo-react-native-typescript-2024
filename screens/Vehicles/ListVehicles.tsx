@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, FlatList, Image, Button } from "react-native";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import vehicleApi from "../../api/vehicle/vehicleApi";
 import LoadingModal from "../LoadingModal";
@@ -14,8 +14,12 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { skipToken } from '@reduxjs/toolkit/query/react';
+import { useCheckAuthentication } from '../../api/hooks/useCheckAuthentication';
 
 const ListVehicles = () => {
+  const { userObject, userObjectFull, logout } = useCheckAuthentication();
+    //
   const [selectedVehicleId, setSelectedVehicleId] = React.useState(false);
   const [selectedVehicleTitle, setSelectedVehicleTitle] = React.useState(false);
   const [selectedVehicleAddress, setSelectedVehicleAddress] =
@@ -27,18 +31,12 @@ const ListVehicles = () => {
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  const userObject = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[0].data
-  );
-  const userObjectFull = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[1].data
-  );
-  const dataSend = {
-    token: userObject.token,
-    id: userObjectFull.id,
-  };
-  const { data, error, isError, isLoading } =
-    vehicleApi.useGetVehiclesByUserIdQuery(dataSend);
+  
+  // const userObject = AsyncStorage.getItem('userObject');
+  // const userObjectFull = AsyncStorage.getItem('userObjectFull');
+
+  // const { data, error, isError, isLoading } =
+  //                   vehicleApi.useGetVehiclesByUserIdQuery(null);
 
   const buy = async () => {
     console.log("buy");
@@ -47,20 +45,46 @@ const ListVehicles = () => {
     // setSelectedVehicleTitle(title);
     // setSelectedVehicleAddress(address);
     // const storeData = async () => {
-      try {
-        await AsyncStorage.setItem("order", JSON.stringify({
+    try {
+      await AsyncStorage.setItem(
+        "order",
+        JSON.stringify({
           user_display_name: userObject.user_display_name,
           id: selectedVehicleId,
           title: selectedVehicleTitle,
           address: selectedVehicleAddress,
-        }));
-        navigation.navigate("CreditCard");
-      } catch (e) {
-        console.log("e", e);
-        // saving error
-      }
+        })
+      );
+      navigation.navigate("CreditCard");
+    } catch (e) {
+      console.log("e", e);
+      // saving error
+    }
     // };
   };
+  console.log("1 userObject ", userObject);
+  console.log("1 userObjectFull ", userObjectFull);
+
+  // Hook fora de condicionais
+  const { data, error, isError, isLoading } =
+    vehicleApi.useGetVehiclesByUserIdQuery(
+      userObject && userObjectFull
+        ? { token: userObject.token, id: userObjectFull.id }
+        : skipToken
+    );
+
+  if (!userObject || !userObjectFull) {
+    return <Text>Loading...</Text>;
+  }
+  console.log("2 userObject ", userObject);
+  console.log("2 userObjectFull ", userObjectFull);
+  // const dataSend = {
+  //   token: userObject.token,
+  //   id: userObjectFull.id,
+  // };
+  // console.log("dataSend", dataSend)
+  // const { data, error, isError, isLoading } =
+  //   vehicleApi.useGetVehiclesByUserIdQuery(dataSend);
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -117,7 +141,9 @@ const ListVehicles = () => {
           <List.Item
             title="Delivery Eco Wash"
             style={styles.listItem}
-            onPress={()=>{buy()}}
+            onPress={() => {
+              buy();
+            }}
             description="EURO 15"
             left={() => (
               <Image

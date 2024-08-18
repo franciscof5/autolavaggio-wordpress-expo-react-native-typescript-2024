@@ -6,10 +6,13 @@ import { useIsFocused } from "@react-navigation/native";
 // import Toast from 'react-native-root-toast';
 import LoadingModal from "./LoadingModal";
 import { useLoginUserMutation, useGetFullUserMutation } from "../api/currentUserApi/currentUserApi";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const logo = require("../assets/images/gio-logo.png");
 const lavagem1 = require("../assets/images/foto-lavagem-1.jpg");
 
 export default function LoginScreen({ navigation }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState(global.USER)
   const [password, setPassword] = useState(global.PASS)
 
@@ -25,6 +28,27 @@ export default function LoginScreen({ navigation }) {
     // setTimeout(()=>{onSubmit()}, 2000)
   }, [navigation]);
 
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      console.log("LoginScreen AsyncStorage checkAuthentication" )
+      try {
+        const userObject = await AsyncStorage.getItem('userObject');
+        if (userObject) {
+          console.log("LoginScreen AsyncStorage userObject", userObject)
+          global.TOKEN = userObject.token;
+          navigation.navigate("Home")
+          setIsAuthenticated(true);
+        } else {
+          console.log("No userObject found")
+        }
+      } catch (error) {
+        console.error('Failed to check authentication.', error);
+      }
+    };
+    
+    checkAuthentication();
+  }, [navigation]);
+
   const {
     handleSubmit,
     control,
@@ -33,6 +57,26 @@ export default function LoginScreen({ navigation }) {
   } = useForm();
   const isFocused = useIsFocused();
   
+  const SaveUserObject = async (userObject) => {
+    console.log("AsyncStorage SaveUserObject")
+    try {
+      await AsyncStorage.setItem('userObject', JSON.stringify(userObject));
+      // setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Failed to userObject.', error);
+    }
+  };
+
+  const SaveFullUserObject = async (userObjectFull) => {
+    console.log("AsyncStorage SaveFullUserObject")
+    try {
+      await AsyncStorage.setItem('userObjectFull', JSON.stringify(userObjectFull));
+      // setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Failed to userObjectFull.', error);
+    }
+  };
+
   const onSubmit = () => {
     console.log("onSubmit", username, password);
     loginUser({
@@ -40,13 +84,16 @@ export default function LoginScreen({ navigation }) {
       password: password,
     }).then((resp) => {
       console.log("loginUser resp", resp.data);
-      global.TOKEN = resp.data.token;
+      let token_received = resp.data.token;
+      global.TOKEN = token_received;
+      SaveUserObject(resp.data)
 
-      if (resp.data.token) {
-        console.log("loginUser token: ", resp.data.token);
+      if (token_received) {
+        console.log("loginUser token: ", token_received);
         getFullUser({
-          token: resp.data.token,
+          token: token_received,
         }).then((resp)=>{
+          SaveFullUserObject(resp.data)
           console.log("getFullUser resp", resp);
           navigation.navigate("Home");
         });

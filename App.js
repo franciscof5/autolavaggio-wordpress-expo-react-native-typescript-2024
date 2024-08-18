@@ -13,6 +13,8 @@ import { store } from './api/store'
 import { Provider, useSelector } from 'react-redux'
 import { Appbar, Menu } from 'react-native-paper';
 import { getHeaderTitle } from '@react-navigation/elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
 // import {PLACES_API} from '@env'
 // import Config from "react-native-config";
@@ -23,6 +25,128 @@ import { getHeaderTitle } from '@react-navigation/elements';
 // import { AppRegistry } from 'react-native';
 // import * as Device from 'expo-device';
 // import * as Notifications from 'expo-notifications';
+
+// require("./theme.js")
+// import "./theme.js"
+
+import Login from "./screens/Login"
+import Register from "./screens/Register"
+import Home from "./screens/Home";
+import AddVehicle from "./screens/Vehicles/AddVehicle"
+import ListVehicles from "./screens/Vehicles/ListVehicles"
+import CreditCard from "./screens/CreditCard"
+
+
+export default function App() {
+  // const [expoPushToken, setExpoPushToken] = useState('');
+  // const [notification, setNotification] = useState(false);
+  // const notificationListener = useRef();
+  // const responseListener = useRef();
+  console.log("process.env.SUSERR", process.env.SUSERR)
+  console.log("process", process)
+
+  global.PLACES_API = process.env.NEW_PLACES_API;
+  global.USER = process.env.SUSERR ? process.env.SUSERR : "foca";
+  global.PASS = process.env.PASS ? process.env.PASS : "931777";
+
+  return (
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <RootSiblingParent>
+          <NavigationContainer>
+            <Stack.Navigator 
+              initialRouteName="Login"
+              screenOptions={{
+                header: (props) => <CustomNavigationBar {...props} />
+              }}
+              >
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} />
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Add Vehicle" component={AddVehicle} />
+              <Stack.Screen name="CreditCard" component={CreditCard} />
+              <Stack.Screen name="ListVehicles" component={ListVehicles} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </RootSiblingParent>
+      </PaperProvider>
+    </Provider>
+  );
+}
+
+
+const CustomNavigationBar = ({
+  navigation,
+  route,
+  options,
+  back,
+} ) => {
+  const [visible, setVisible] = useState(false);
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const title = getHeaderTitle(options, route.name);
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Failed to log out.', error);
+    }
+  };
+
+  return (
+    <Appbar.Header>
+      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+      <Appbar.Content title={title} />
+      {back ? ( <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={
+            <Appbar.Action
+              icon="dots-vertical"
+              onPress={openMenu}
+            />
+          }>
+          <Menu.Item
+            onPress={() => {
+              console.log('Option 1 was pressed');
+              navigation.navigate("Login")
+            }}
+            title="Logout"
+          />
+          {/* <Menu.Item
+            onPress={() => {
+              console.log('Option 2 was pressed');
+            }}
+            title="Option 2"
+          />
+          <Menu.Item
+            onPress={() => {
+              console.log('Option 3 was pressed');
+            }}
+            title="Option 3"
+            disabled
+          /> */}
+        </Menu>
+      ) : null}
+    </Appbar.Header>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: "#ecf0f1",
+    padding: 8,
+    //
+    backgroundColor: '#DDD',
+    alignItems: 'center',
+  },
+});
 
 const Stack = createStackNavigator();
 
@@ -92,113 +216,3 @@ const theme = {
     "backdrop": "rgba(43, 50, 43, 0.4)"
   }
 };
-
-import Login from "./screens/Login"
-import Register from "./screens/Register"
-import HomeMap from "./screens/HomeMap";
-import AddVehicle from "./screens/Vehicles/AddVehicle"
-import ListVehicles from "./screens/Vehicles/ListVehicles"
-import CreditCard from "./screens/CreditCard"
-
-
-export default function App() {
-  // const [expoPushToken, setExpoPushToken] = useState('');
-  // const [notification, setNotification] = useState(false);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
-  console.log("process.env.SUSERR", process.env.SUSERR)
-  console.log("process", process)
-
-  global.PLACES_API = process.env.NEW_PLACES_API;
-  global.USER = process.env.SUSERR ? process.env.SUSERR : "foca";
-  global.PASS = process.env.PASS ? process.env.PASS : "931777";
-
-  return (
-    <Provider store={store}>
-      <PaperProvider theme={theme}>
-        <RootSiblingParent>
-          <NavigationContainer>
-            <Stack.Navigator 
-              initialRouteName="Login"
-              screenOptions={{
-                header: (props) => <CustomNavigationBar {...props} />
-              }}
-              >
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Register" component={Register} />
-              <Stack.Screen name="Home" component={HomeMap} />
-              <Stack.Screen name="Add Vehicle" component={AddVehicle} />
-              <Stack.Screen name="CreditCard" component={CreditCard} />
-              <Stack.Screen name="ListVehicles" component={ListVehicles} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </RootSiblingParent>
-      </PaperProvider>
-    </Provider>
-  );
-}
-
-
-const CustomNavigationBar = ({
-  navigation,
-  route,
-  options,
-  back,
-} ) => {
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
-
-  const title = getHeaderTitle(options, route.name);
-
-  return (
-    <Appbar.Header>
-      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-      <Appbar.Content title={title} />
-      {back ? ( <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={
-            <Appbar.Action
-              icon="dots-vertical"
-              onPress={openMenu}
-            />
-          }>
-          <Menu.Item
-            onPress={() => {
-              console.log('Option 1 was pressed');
-              navigation.navigate("Login")
-            }}
-            title="Logout"
-          />
-          {/* <Menu.Item
-            onPress={() => {
-              console.log('Option 2 was pressed');
-            }}
-            title="Option 2"
-          />
-          <Menu.Item
-            onPress={() => {
-              console.log('Option 3 was pressed');
-            }}
-            title="Option 3"
-            disabled
-          /> */}
-        </Menu>
-      ) : null}
-    </Appbar.Header>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-    //
-    backgroundColor: '#DDD',
-    alignItems: 'center',
-  },
-});
