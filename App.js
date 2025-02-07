@@ -14,6 +14,9 @@ import { Provider, useSelector } from 'react-redux'
 import { Appbar, Menu } from 'react-native-paper';
 import { getHeaderTitle } from '@react-navigation/elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PLACES_API_3, USER_2, PASS_2 } from "@env";
+console.log("App.js", PLACES_API_3, USER_2, PASS_2);
+
 
 //import { getVehicles } from "./store/vehicle/vehicleSlice";
 // import {PLACES_API} from '@env'
@@ -36,16 +39,10 @@ import AddVehicle from "./screens/Vehicles/AddVehicle"
 import ListVehicles from "./screens/Vehicles/ListVehicles"
 import CreditCard from "./screens/CreditCard"
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
-  console.log("process.env.SUSERR", process.env.SUSERR)
-  console.log("process", process)
-
-  global.PLACES_API = process.env.NEW_PLACES_API;
-  global.USER = process.env.SUSERR ? process.env.SUSERR : "foca";
-  global.PASS = process.env.PASS ? process.env.PASS : "931777";
-
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>

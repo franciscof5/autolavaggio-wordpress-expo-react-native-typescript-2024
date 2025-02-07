@@ -20,7 +20,7 @@ const vehicleApi = createApi({
     }),
     getVehiclesByUserId: builder.query<any, any>({
       query (data) {
-        console.log("getVehiclesByUserId =", data.token)
+        console.log("getVehiclesByUserId =", data.id)
         return {
           url: `/vehicle?author=${data.id}&context=edit`,
           method: 'GET',

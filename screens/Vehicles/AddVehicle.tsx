@@ -27,8 +27,14 @@ import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Title } from "react-native-paper";
-
+import { PLACES_API_3 } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+console.log("AddVehicle.tsx PLACES_API_3", PLACES_API_3)
 const logo = require("../../assets/images/gio-logo.png");
+interface UserObject {
+  token: string;
+  // Add other properties as needed
+}
 
 export default function Profile({ navigation }) {
   const [carTitle, setCarTitle] = useState(null);
@@ -62,10 +68,34 @@ export default function Profile({ navigation }) {
     },
   });
   useEffect(() => {
-    if (carAddress) {
-      // setValue([{ carAddressF: carAddress }]);
-    }
-  }, [carAddress]);
+    console.log("AddVehicle AsyncStorage checkAuthentication" )
+
+    const checkAuthentication = async () => {
+      try {
+        const userObject = await AsyncStorage.getItem("userObject");
+        if (userObject) {
+          console.log("AddVehicle AsyncStorage userObject", userObject)
+
+          const parsedUserObject: UserObject = JSON.parse(userObject);
+          global.TOKEN = parsedUserObject.token;
+          console.log("loginUser token: ", parsedUserObject.token);
+          // navigation.navigate("Home");
+          // setIsAuthenticated(true);
+        } else {
+          console.log("No userObject found")
+        }
+      } catch (error) {
+        console.error("Failed to check authentication.", error);
+      }
+    };
+
+    checkAuthentication();
+  }, [navigation]);
+  // useEffect(() => {
+  //   if (carAddress) {
+  //     // setValue([{ carAddressF: carAddress }]);
+  //   }
+  // }, [carAddress]);
   //
   const [visibleSnack, setVisibleSnack] = React.useState(false);
   const onToggleSnackBar = () => setVisibleSnack(!visibleSnack);
@@ -78,9 +108,9 @@ export default function Profile({ navigation }) {
     longitudeDelta: 12,
   });
 
-  const userObject = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[0].data
-  );
+  // const userObject = useSelector(
+  //   (state) => Object.values(state.currentUserApi.mutations)[0].data
+  // );
   //
 
   const uploadImage = async (image) => {
@@ -357,14 +387,14 @@ export default function Profile({ navigation }) {
             onFail={(error) => console.error(error)}
             onNotFound={() => console.log("no results")}
             query={{
-              key: global.PLACES_API,
+              key: PLACES_API_3,
               language: "en",
             }}
             // predefinedPlaces={[currentPlace]}
             textInputProps={{
               InputComp: TextInput,
               // icon:{icon:"map-marker"},
-              icon: "map-marker",
+              // icon: "map-marker",
               // style:{styles.GooglePlacesAutocomplete},
               leftIcon: { type: "font-awesome", name: "chevron-left" },
               errorStyle: { color: "red" },
@@ -374,9 +404,9 @@ export default function Profile({ navigation }) {
         name="carAddressF"
       />
       {errors.carAddressF && <Text>This is required.</Text>}
-      <MapView style={styles.map} region={mapRegion}>
+      {/* <MapView style={styles.map} region={mapRegion}>
         <Marker title="Io" coordinate={mapRegion} />
-      </MapView>
+      </MapView> */}
 
       <NavButtonsArrows
         nextStep="3"

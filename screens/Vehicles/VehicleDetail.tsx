@@ -4,13 +4,14 @@ import { useSelector } from "react-redux";
 import vehicleApi from "../../api/vehicle/vehicleApi";
 import LoadingModal from "../LoadingModal";
 import { List, MD3Colors, Avatar } from "react-native-paper";
+import { AppState } from "../interfaceLogin";
 
 const ListVehicles = () => {
   const userObject = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[0].data
+    (state: AppState) => Object.values(state.currentUserApi.mutations)[0]?.data
   );
   const userObjectFull = useSelector(
-    (state) => Object.values(state.currentUserApi.mutations)[1].data
+    (state: AppState) => Object.values(state.currentUserApi.mutations)[1]?.data
   );
 
   const { data, error, isError, isLoading } =

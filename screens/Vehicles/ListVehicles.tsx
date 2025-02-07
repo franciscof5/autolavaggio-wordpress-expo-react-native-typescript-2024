@@ -80,6 +80,8 @@ const ListVehicles = () => {
     <View style={styles.container}>
       {isLoading ? (
         <LoadingModal isLoading={isLoading} />
+      ) : isError ? (
+        <Text>Error, please logout</Text>
       ) : (
         <View>
           {/* <Text>Macchinas de {userObject.user_display_name}</Text> */}
